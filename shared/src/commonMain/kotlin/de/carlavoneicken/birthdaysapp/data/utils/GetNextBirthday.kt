@@ -34,12 +34,3 @@ fun getNextBirthday(month: Int, day: Int) : LocalDate? {
     }
 }
 
-fun getNextAge(year: Int?, month: Int, day: Int) : Int? {
-    val nextBirthday = getNextBirthday(month, day)
-
-    return if (year != null && nextBirthday != null) {
-        nextBirthday.year - year
-    } else {
-        null
-    }
-}
