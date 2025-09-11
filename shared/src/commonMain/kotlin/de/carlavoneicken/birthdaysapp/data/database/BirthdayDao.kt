@@ -21,11 +21,11 @@ interface BirthdayDao {
     fun observeBirthdaysSortedByName(): Flow<List<BirthdayEntity>>
 
     @Insert
-    suspend fun createBirthday(birthday: Birthday)
+    suspend fun createBirthday(birthday: BirthdayEntity): Long
 
     @Update
-    suspend fun updateBirthday(birthday: Birthday)
+    suspend fun updateBirthday(birthday: BirthdayEntity)
 
     @Delete
-    suspend fun deleteBirthday(birthday: Birthday)
+    suspend fun deleteBirthday(birthday: BirthdayEntity)
 }
