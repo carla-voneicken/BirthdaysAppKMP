@@ -3,6 +3,7 @@ package de.carlavoneicken.birthdaysapp.data.repositories
 import de.carlavoneicken.birthdaysapp.data.database.BirthdayDao
 import de.carlavoneicken.birthdaysapp.data.utils.toDomain
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
+import de.carlavoneicken.birthdaysapp.data.utils.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -23,7 +24,7 @@ class BirthdaysRepositoryImpl(private val birthdayDao: BirthdayDao): BirthdaysRe
 
     override suspend fun createBirthday(birthday: Birthday): Result<Unit> {
         return try {
-            birthdayDao.createBirthday(birthday)
+            birthdayDao.createBirthday(birthday.toEntity())
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -32,7 +33,7 @@ class BirthdaysRepositoryImpl(private val birthdayDao: BirthdayDao): BirthdaysRe
 
     override suspend fun updateBirthday(birthday: Birthday): Result<Unit> {
         return try {
-            birthdayDao.updateBirthday(birthday)
+            birthdayDao.updateBirthday(birthday.toEntity())
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -41,7 +42,7 @@ class BirthdaysRepositoryImpl(private val birthdayDao: BirthdayDao): BirthdaysRe
 
     override suspend fun deleteBirthday(birthday: Birthday): Result<Unit> {
         return try {
-            birthdayDao.deleteBirthday(birthday)
+            birthdayDao.deleteBirthday(birthday.toEntity())
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
