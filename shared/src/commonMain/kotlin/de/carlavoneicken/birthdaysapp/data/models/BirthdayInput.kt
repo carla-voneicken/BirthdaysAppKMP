@@ -8,6 +8,7 @@ data class BirthdayInput(
 ) {
     fun toDomain(): Birthday {
         return Birthday(
+            id = 0L,
             name = name.trim(),
             day = day.toInt(),
             month = month.toInt(),
