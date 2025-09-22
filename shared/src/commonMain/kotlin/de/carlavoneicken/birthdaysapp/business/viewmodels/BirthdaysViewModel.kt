@@ -3,13 +3,9 @@ package de.carlavoneicken.birthdaysapp.business.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
-import de.carlavoneicken.birthdaysapp.business.usecases.CreateBirthdayUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveBirthdaysSortedByNameUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveBirthdaysSortedByUpcomingUsecase
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
-import de.carlavoneicken.birthdaysapp.data.models.BirthdayInput
-import de.carlavoneicken.birthdaysapp.data.utils.BirthdayValidationResult
-import de.carlavoneicken.birthdaysapp.data.utils.validateBirthdayInput
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +20,6 @@ import org.koin.core.component.inject
 class BirthdaysViewModel(): ViewModel(), KoinComponent {
     private val observeBirthdaysSortedByNameUsecase: ObserveBirthdaysSortedByNameUsecase by inject()
     private val observeBirthdaysSortedByUpcomingUsecase: ObserveBirthdaysSortedByUpcomingUsecase by inject()
-    private val createBirthdayUsecase: CreateBirthdayUsecase by inject()
 
     enum class SortMode { BY_NAME, BY_UPCOMING }
 
