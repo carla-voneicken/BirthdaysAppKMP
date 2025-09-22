@@ -13,10 +13,12 @@ class BirthdaysRepositoryImpl(private val birthdayDao: BirthdayDao): BirthdaysRe
         birthdayDao.observeSingleBirthday(id)
             .map { entity -> entity?.toDomain() }
 
+    // database handles the sorting by name
     override fun observeBirthdaysSortedByName(): Flow<List<Birthday>> =
         birthdayDao.observeBirthdaysSortedByName()
             .map { entities -> entities.map { it.toDomain() } }
 
+    // database only returns list of birthdays, after mapping them .toDomain we can sort them by upcoming date
     override fun observeBirthdaysSortedByUpcoming(): Flow<List<Birthday>> =
         birthdayDao.observeAllBirthdays()
             .map { entities -> entities.map { it.toDomain() }

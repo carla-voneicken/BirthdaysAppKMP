@@ -11,7 +11,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 data class Birthday(
-    val id: Long? = null,
+    val id: Long = 0L,
     val name: String,
     val day: Int,
     val month: Int,
