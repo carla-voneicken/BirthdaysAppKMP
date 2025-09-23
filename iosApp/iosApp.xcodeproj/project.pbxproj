@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C3B1648E2E82806900934859 /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = C3B1648D2E82806900934859 /* KMPNativeCoroutinesAsync */; };
 		C3D10A0F2E71AEB100435C46 /* KMPObservableViewModelCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3D10A0E2E71AEB100435C46 /* KMPObservableViewModelCore */; };
 		C3D10A112E71AEB100435C46 /* KMPObservableViewModelSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C3D10A102E71AEB100435C46 /* KMPObservableViewModelSwiftUI */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 			files = (
 				C3D10A0F2E71AEB100435C46 /* KMPObservableViewModelCore in Frameworks */,
 				C3D10A112E71AEB100435C46 /* KMPObservableViewModelSwiftUI in Frameworks */,
+				C3B1648E2E82806900934859 /* KMPNativeCoroutinesAsync in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,8 +69,16 @@
 			children = (
 				BA9DF66E9B4F4F541039338A /* Configuration */,
 				ECECF59341ADCF47EDAE4351 /* iosApp */,
+				C3B1648C2E82806900934859 /* Frameworks */,
 				5310E252FD81CBEB372E72E4 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		C3B1648C2E82806900934859 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -94,6 +104,7 @@
 			packageProductDependencies = (
 				C3D10A0E2E71AEB100435C46 /* KMPObservableViewModelCore */,
 				C3D10A102E71AEB100435C46 /* KMPObservableViewModelSwiftUI */,
+				C3B1648D2E82806900934859 /* KMPNativeCoroutinesAsync */,
 			);
 			productName = iosApp;
 			productReference = D1C031B8F8CBB6D48552C939 /* BirthdaysApp.app */;
@@ -402,6 +413,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C3B1648D2E82806900934859 /* KMPNativeCoroutinesAsync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3D10A0C2E71AEA200435C46 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesAsync;
+		};
 		C3D10A0E2E71AEB100435C46 /* KMPObservableViewModelCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C3D10A0D2E71AEB100435C46 /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */;
