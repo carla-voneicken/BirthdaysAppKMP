@@ -6,29 +6,31 @@
 //
 
 import SwiftUI
+import Shared
+import KMPObservableViewModelSwiftUI
 
 struct BirthdayItemSubview: View {
-    let item: BirthdayItem
-    @ObservedObject var viewModel: ListViewModel
+    let item: Birthday
+    //@ObservedViewModel var viewModel: BirthdaysViewModel
     
     var body: some View {
         HStack {
-            Image(item.zodiacSign.rawValue)
-                .resizable()
-                .frame(width: 50, height: 50)
+//            Image(item.zodiacSign)
+//                .resizable()
+//                .frame(width: 50, height: 50)
             VStack(alignment: .leading) {
                 Text(item.name)
                     .font(.title3)
                 if let age = item.nextAge {
-                    Text("wird \(age) am \(item.nextBirthday.weekday), \(item.nextBirthday.dayFullMonth)")
+                    Text("wird \(age) am \(formattedNextBirthday(item))")
                         .font(.caption)
                 } else {
-                    Text("am \(item.nextBirthday.weekday), \(item.nextBirthday.dayFullMonth)")
+                    Text("am \(formattedNextBirthday(item))")
                         .font(.caption)
                 }
             }
             Spacer()
-            Text(viewModel.daysFromNow(until: item.nextBirthday))
+            Text(Birthday.daysFromNow)
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
 
@@ -40,7 +42,7 @@ struct BirthdayItemSubview: View {
 
 #Preview {
     BirthdayItemSubview(
-        item: BirthdayItem(name: "Shannon Cruz", day: 4, month: 10, year: 2021),
-        viewModel: ListViewModel()
+        item: Birthday(id: 1, name: "Shannon Cruz", day: 4, month: 10, year: 2021),
+        //viewModel: BirthdaysViewModel()
     )
 }
