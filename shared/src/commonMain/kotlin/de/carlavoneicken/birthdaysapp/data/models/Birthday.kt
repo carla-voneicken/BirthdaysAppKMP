@@ -1,5 +1,6 @@
 package de.carlavoneicken.birthdaysapp.data.models
 
+import de.carlavoneicken.birthdaysapp.data.utils.getDaysFromNow
 import de.carlavoneicken.birthdaysapp.data.utils.getNextAge
 import de.carlavoneicken.birthdaysapp.data.utils.getNextBirthday
 import de.carlavoneicken.birthdaysapp.data.utils.getZodiacSign
@@ -25,6 +26,12 @@ data class Birthday(
 
     val nextAge: Int?
         get() = getNextAge(year, month, day)
+
+    val nextBirthdayIso: String
+        get() = nextBirthday.toString()
+
+    val daysFromNow: String
+        get() = getDaysFromNow(nextBirthday)
 }
 
 
