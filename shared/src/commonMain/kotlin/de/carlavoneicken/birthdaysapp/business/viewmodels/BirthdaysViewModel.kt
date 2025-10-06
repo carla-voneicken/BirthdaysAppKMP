@@ -1,22 +1,22 @@
 package de.carlavoneicken.birthdaysapp.business.viewmodels
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
+import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
+import com.rickclephas.kmp.observableviewmodel.ViewModel
+import com.rickclephas.kmp.observableviewmodel.launch
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveBirthdaysSortedByNameUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveBirthdaysSortedByUpcomingUsecase
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class BirthdaysViewModel(): ViewModel(), KoinComponent {
     private val observeBirthdaysSortedByNameUsecase: ObserveBirthdaysSortedByNameUsecase by inject()
     private val observeBirthdaysSortedByUpcomingUsecase: ObserveBirthdaysSortedByUpcomingUsecase by inject()
@@ -29,29 +29,38 @@ class BirthdaysViewModel(): ViewModel(), KoinComponent {
         val errorMessage: String? = null
     )
 
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(viewModelScope, UiState())
     @NativeCoroutinesState
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    private val _sortMode = MutableStateFlow(SortMode.BY_UPCOMING)
+    private val _sortMode = MutableStateFlow(viewModelScope, SortMode.BY_UPCOMING)
     @NativeCoroutinesState
     val sortMode: StateFlow<SortMode> = _sortMode.asStateFlow()
 
+
+    // flatMapLatest means: start collection from the flow returned for the latest request -> cancel any previous
+    // flow that was running and always keep only the LATEST one active
+    // So when when the _sortMode is changed, flatMapLatest cancels the previous flow and starts a new one
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val birthdaysFlow: Flow<List<Birthday>> = _sortMode
+        .flatMapLatest { mode ->
+            when (mode) {
+                SortMode.BY_NAME -> observeBirthdaysSortedByNameUsecase()
+                SortMode.BY_UPCOMING -> observeBirthdaysSortedByUpcomingUsecase()
+            }
+        }
+
+    // on initialization we're launching the birthdaysFlow, catching any errors and collecting the
+    // birthdays data to update _the uiState
     init {
         viewModelScope.launch {
-            _sortMode
-                .flatMapLatest { mode ->
-                    when (mode) {
-                        SortMode.BY_NAME -> observeBirthdaysSortedByNameUsecase()
-                        SortMode.BY_UPCOMING -> observeBirthdaysSortedByUpcomingUsecase()
-                    }
-                }
+            birthdaysFlow
                 .catch { e: Throwable ->
                     updateState { copy(errorMessage = e.message ?: "Unbekannter Fehler") }
                 }
                 .collect { birthdays ->
-                updateState { copy(birthdays = birthdays, isLoading = false, errorMessage = null)}
-            }
+                    updateState { copy(birthdays = birthdays, isLoading = false, errorMessage = null) }
+                }
         }
     }
 
@@ -59,5 +68,8 @@ class BirthdaysViewModel(): ViewModel(), KoinComponent {
         _uiState.value = _uiState.value.update()
     }
 
-
+    // change sortMode to the mode provided as a parameter
+    fun setSortMode(mode: SortMode) {
+        _sortMode.value = mode
+    }
 }
