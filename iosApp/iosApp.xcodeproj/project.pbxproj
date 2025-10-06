@@ -7,12 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C3B1648E2E82806900934859 /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = C3B1648D2E82806900934859 /* KMPNativeCoroutinesAsync */; };
-		C3D10A0F2E71AEB100435C46 /* KMPObservableViewModelCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3D10A0E2E71AEB100435C46 /* KMPObservableViewModelCore */; };
-		C3D10A112E71AEB100435C46 /* KMPObservableViewModelSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C3D10A102E71AEB100435C46 /* KMPObservableViewModelSwiftUI */; };
+		C3E5F6CA2E8D120C006C711B /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E5F6C92E8D120C006C711B /* Shared.framework */; };
+		C3E5F6CB2E8D120C006C711B /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C3E5F6C92E8D120C006C711B /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C3E5F6CF2E8D146D006C711B /* KMPObservableViewModelCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3E5F6CE2E8D146D006C711B /* KMPObservableViewModelCore */; };
+		C3E5F6D12E8D146D006C711B /* KMPObservableViewModelSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C3E5F6D02E8D146D006C711B /* KMPObservableViewModelSwiftUI */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C3E5F6CC2E8D120C006C711B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C3E5F6CB2E8D120C006C711B /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		C3E5F6C92E8D120C006C711B /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = ../shared/build/bin/iosSimulatorArm64/debugFramework/Shared.framework; sourceTree = "<group>"; };
 		D1C031B8F8CBB6D48552C939 /* BirthdaysApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BirthdaysApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -47,9 +63,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3D10A0F2E71AEB100435C46 /* KMPObservableViewModelCore in Frameworks */,
-				C3D10A112E71AEB100435C46 /* KMPObservableViewModelSwiftUI in Frameworks */,
-				C3B1648E2E82806900934859 /* KMPNativeCoroutinesAsync in Frameworks */,
+				C3E5F6D12E8D146D006C711B /* KMPObservableViewModelSwiftUI in Frameworks */,
+				C3E5F6CF2E8D146D006C711B /* KMPObservableViewModelCore in Frameworks */,
+				C3E5F6CA2E8D120C006C711B /* Shared.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +93,7 @@
 		C3B1648C2E82806900934859 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C3E5F6C92E8D120C006C711B /* Shared.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -89,9 +106,11 @@
 			buildConfigurationList = 235E3B51BD01D163294DB624 /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
 				82C8BB063EB4A49F1C7C63B5 /* Compile Kotlin Framework */,
+				C3E5F6C82E8D11BA006C711B /* ShellScript */,
 				5BD83EBEEF409564E2BF1AE2 /* Sources */,
 				FFBF26E4774381C5CCF423B9 /* Frameworks */,
 				C8F85B77A5E91222A58CA19C /* Resources */,
+				C3E5F6CC2E8D120C006C711B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -102,9 +121,8 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
-				C3D10A0E2E71AEB100435C46 /* KMPObservableViewModelCore */,
-				C3D10A102E71AEB100435C46 /* KMPObservableViewModelSwiftUI */,
-				C3B1648D2E82806900934859 /* KMPNativeCoroutinesAsync */,
+				C3E5F6CE2E8D146D006C711B /* KMPObservableViewModelCore */,
+				C3E5F6D02E8D146D006C711B /* KMPObservableViewModelSwiftUI */,
 			);
 			productName = iosApp;
 			productReference = D1C031B8F8CBB6D48552C939 /* BirthdaysApp.app */;
@@ -135,8 +153,8 @@
 			mainGroup = 55E15A9058D87BA0634EC303;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				C3D10A0C2E71AEA200435C46 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */,
-				C3D10A0D2E71AEB100435C46 /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */,
+				C3E5F6C22E8D10D1006C711B /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */,
+				C3E5F6CD2E8D146D006C711B /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5310E252FD81CBEB372E72E4 /* Products */;
@@ -177,6 +195,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
+		};
+		C3E5F6C82E8D11BA006C711B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -353,6 +389,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
 				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_PREVIEWS = YES;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/../shared/build/bin/iosSimulatorArm64/debugFramework/**";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iosApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -394,7 +431,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C3D10A0C2E71AEA200435C46 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */ = {
+		C3E5F6C22E8D10D1006C711B /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rickclephas/KMP-NativeCoroutines.git";
 			requirement = {
@@ -402,7 +439,7 @@
 				kind = branch;
 			};
 		};
-		C3D10A0D2E71AEB100435C46 /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */ = {
+		C3E5F6CD2E8D146D006C711B /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rickclephas/KMP-ObservableViewModel.git";
 			requirement = {
@@ -413,19 +450,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C3B1648D2E82806900934859 /* KMPNativeCoroutinesAsync */ = {
+		C3E5F6CE2E8D146D006C711B /* KMPObservableViewModelCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C3D10A0C2E71AEA200435C46 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
-			productName = KMPNativeCoroutinesAsync;
-		};
-		C3D10A0E2E71AEB100435C46 /* KMPObservableViewModelCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C3D10A0D2E71AEB100435C46 /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */;
+			package = C3E5F6CD2E8D146D006C711B /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */;
 			productName = KMPObservableViewModelCore;
 		};
-		C3D10A102E71AEB100435C46 /* KMPObservableViewModelSwiftUI */ = {
+		C3E5F6D02E8D146D006C711B /* KMPObservableViewModelSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C3D10A0D2E71AEB100435C46 /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */;
+			package = C3E5F6CD2E8D146D006C711B /* XCRemoteSwiftPackageReference "KMP-ObservableViewModel" */;
 			productName = KMPObservableViewModelSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
