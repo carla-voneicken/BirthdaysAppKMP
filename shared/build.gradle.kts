@@ -39,13 +39,14 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
 
-            api("com.rickclephas.kmp:kmp-observableviewmodel-core:1.0.0-BETA-13")
+            api("com.rickclephas.kmp:kmp-observableviewmodel-core:1.0.0-BETA-14")
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
 
             implementation(libs.kotlinx.datetime)
 
+            implementation(libs.components.resources)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
