@@ -11,7 +11,6 @@ import KMPObservableViewModelSwiftUI
 
 struct BirthdayItemSubview: View {
     let item: Birthday
-    //@ObservedViewModel var viewModel: BirthdaysViewModel
     
     var body: some View {
         HStack {
@@ -30,7 +29,7 @@ struct BirthdayItemSubview: View {
                 }
             }
             Spacer()
-            Text(Birthday.daysFromNow)
+            Text(item.daysFromNow)
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
 
@@ -43,6 +42,5 @@ struct BirthdayItemSubview: View {
 #Preview {
     BirthdayItemSubview(
         item: Birthday(id: 1, name: "Shannon Cruz", day: 4, month: 10, year: 2021),
-        //viewModel: BirthdaysViewModel()
     )
 }
