@@ -6,21 +6,19 @@
 //
 
 import SwiftUI
+import KMPObservableViewModelSwiftUI
+import Shared
 
 struct ListScreen: View {
-    @StateObject private var viewModel = ListViewModel()
+    @StateViewModel var viewmodel = BirthdaysViewModel()
     
     var body: some View {
-        List {
-            // Loop through all months and display their name as the section header
-            ForEach(viewModel.months, id: \.self) { month in
-                Section(header: Text(month.monthName)) {
-                    
-                    // Loop through all birthdays grouped to that month
-                    ForEach(viewModel.groupedItems[month] ?? [], id: \.id) { item in
-                        BirthdayItemSubview(item: item, viewModel: viewModel)
-                    }
-                }
+        List(viewmodel.uiState.birthdays, id: \.id) { birthday in
+            BirthdayItemSubview(item: birthday)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                //SortToolbarButton()
             }
         }
     }
