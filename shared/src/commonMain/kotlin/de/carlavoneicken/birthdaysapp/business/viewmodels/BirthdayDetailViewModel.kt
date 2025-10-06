@@ -1,14 +1,13 @@
 package de.carlavoneicken.birthdaysapp.business.viewmodels
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
+import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
+import com.rickclephas.kmp.observableviewmodel.ViewModel
+import com.rickclephas.kmp.observableviewmodel.launch
 import de.carlavoneicken.birthdaysapp.business.usecases.DeleteBirthdayUsecase
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -22,7 +21,7 @@ class BirthdayDetailViewModel(birthday: Birthday): ViewModel(), KoinComponent {
         val successMessage: String? = null
     )
 
-    private val _uiState = MutableStateFlow(UiState(birthday))
+    private val _uiState = MutableStateFlow(viewModelScope, UiState(birthday))
     @NativeCoroutinesState
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
