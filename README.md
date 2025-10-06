@@ -20,6 +20,7 @@ The app is a Kotlin Multiplatform project for Android and iOS. It is being creat
 - Calendar view
 - Export data
 - Cloud storage
+- Support different languages
 
 ### 🛠️ Technologies
 
