@@ -1,6 +1,6 @@
 ## 🎂 Birthdays App
 
-This is a work-in-progress. And app to save birthdays of friends and family to be reminded to congratulate them.
+This is a work-in-progress. An app to save birthdays of friends and family to be reminded to congratulate them.
 
 ### ✨ About the Project
 
