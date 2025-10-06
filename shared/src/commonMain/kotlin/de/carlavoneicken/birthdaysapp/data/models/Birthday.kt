@@ -3,9 +3,9 @@ package de.carlavoneicken.birthdaysapp.data.models
 import de.carlavoneicken.birthdaysapp.data.utils.getDaysFromNow
 import de.carlavoneicken.birthdaysapp.data.utils.getNextAge
 import de.carlavoneicken.birthdaysapp.data.utils.getNextBirthday
+import de.carlavoneicken.birthdaysapp.data.utils.getSystemTimeZone
 import de.carlavoneicken.birthdaysapp.data.utils.getZodiacSign
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -22,13 +22,13 @@ data class Birthday(
         get() = getZodiacSign(month, day)
 
     val nextBirthday: LocalDate
-        get() = getNextBirthday(month, day) ?: Clock.System.todayIn(TimeZone.currentSystemDefault())
-
-    val nextAge: Int?
-        get() = getNextAge(year, month, day)
+        get() = getNextBirthday(month, day) ?: Clock.System.todayIn(getSystemTimeZone())
 
     val nextBirthdayIso: String
         get() = nextBirthday.toString()
+
+    val nextAge: Int?
+        get() = getNextAge(year, month, day)
 
     val daysFromNow: String
         get() = getDaysFromNow(nextBirthday)
