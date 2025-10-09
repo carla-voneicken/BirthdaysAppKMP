@@ -16,9 +16,9 @@ kotlin {
     }
     
     listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
+        // iosX64(), // Running on the iOS Simulator on Intel Macs (older)
+        // iosArm64(), // Running on physical iOS devices
+        iosSimulatorArm64() // Running on the iOS Simulator on Apple Silicon Macs (M1/M2/M3)
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "Shared"
@@ -37,14 +37,14 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             //implementation(libs.koin.compose.viewmodel.navigation)
 
-            implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutines.core)
 
-            api("com.rickclephas.kmp:kmp-observableviewmodel-core:1.0.0-BETA-14")
+                api("com.rickclephas.kmp:kmp-observableviewmodel-core:1.0.0-BETA-14")
 
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
+                implementation(libs.room.runtime)
+                implementation(libs.sqlite.bundled)
 
-            implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.datetime)
 
             implementation(libs.components.resources)
         }
@@ -79,6 +79,6 @@ room {
 dependencies {
     add("kspAndroid", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
-    add("kspIosX64", libs.room.compiler)
-    add("kspIosArm64", libs.room.compiler)
+    //add("kspIosX64", libs.room.compiler)
+    //add("kspIosArm64", libs.room.compiler)
 }
