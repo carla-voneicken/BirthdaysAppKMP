@@ -10,14 +10,22 @@ import de.carlavoneicken.birthdaysapp.data.database.BirthdayDao
 import de.carlavoneicken.birthdaysapp.data.database.BirthdaysDatabase
 import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysRepository
 import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysRepositoryImpl
+import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysTestRepository
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val coreModule: Module = module {
+fun coreModule(useFakeData: Boolean = false): Module = module {
     single<BirthdayDao> { get<BirthdaysDatabase>().getBirthdayDao() }
 
-    single<BirthdaysRepository> {
-        BirthdaysRepositoryImpl(get())
+    // useFakeData for testing purposes
+    if (useFakeData) {
+        single<BirthdaysRepository> {
+            BirthdaysTestRepository()
+        }
+    } else {
+        single<BirthdaysRepository> {
+            BirthdaysRepositoryImpl(get())
+        }
     }
 
     single<CreateBirthdayUsecase> {
