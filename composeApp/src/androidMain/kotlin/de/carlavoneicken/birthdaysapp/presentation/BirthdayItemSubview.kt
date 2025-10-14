@@ -1,10 +1,12 @@
 package de.carlavoneicken.birthdaysapp.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -13,12 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import de.carlavoneicken.birthdaysapp.data.utils.createPreviewBirthday
 import de.carlavoneicken.birthdaysapp.utils.formattedNextBirthday
+import de.carlavoneicken.birthdaysapp.utils.toDrawableRes
 
 
 @Composable
@@ -32,6 +36,14 @@ fun BirthdayItemSubview(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        item.zodiacSign?.let { sign ->
+            Image(
+                painter = painterResource(id = sign.toDrawableRes()),
+                contentDescription = sign.description,
+                Modifier.height(40.dp).padding(end = 10.dp)
+            )
+        }
+
         Column(
             modifier = Modifier.wrapContentWidth(),
             verticalArrangement = Arrangement.Center
@@ -43,12 +55,12 @@ fun BirthdayItemSubview(
 
             if (item.nextAge != null) {
                 Text(
-                    text = "wird ${item.nextAge} am ${formattedNextBirthday(item)}",
+                    text = "turns ${item.nextAge} on ${formattedNextBirthday(item)}",
                     style = MaterialTheme.typography.bodySmall
                 )
             } else {
                 Text(
-                    text = "am ${formattedNextBirthday(item)}",
+                    text = "on ${formattedNextBirthday(item)}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -71,6 +83,8 @@ fun BirthdayItemSubview(
 @Composable
 fun BirthdayItemSubviewPreview() {
     MaterialTheme {
-        BirthdayItemSubview(item = createPreviewBirthday(), modifier = Modifier.padding(8.dp))
+        BirthdayItemSubview(
+            item = createPreviewBirthday(),
+            modifier = Modifier.padding(8.dp))
     }
 }

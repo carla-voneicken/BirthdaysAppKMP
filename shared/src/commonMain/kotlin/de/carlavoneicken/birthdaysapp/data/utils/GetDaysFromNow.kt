@@ -15,8 +15,8 @@ fun getDaysFromNow(date: LocalDate): String {
     val days = today.daysUntil(date)
 
     return when (days) {
-        0 -> "Heute"
-        1 -> "Morgen"
-        else -> "In ${days}\n Tagen"
+        0 -> "Today"
+        1 -> "Tomorrow"
+        else -> "In ${days}\n days"
     }
 }

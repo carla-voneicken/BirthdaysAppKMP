@@ -14,17 +14,20 @@ struct BirthdayItemSubview: View {
     
     var body: some View {
         HStack {
-//            Image(item.zodiacSign)
-//                .resizable()
-//                .frame(width: 50, height: 50)
+            if let name = uiImageName(for: item.zodiacSign),
+                           let uiImage = UIImage(named: name) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                        }
             VStack(alignment: .leading) {
                 Text(item.name)
-                    .font(.title3)
+                    .font(.headline)
                 if let age = item.nextAge {
-                    Text("wird \(age) am \(formattedNextBirthday(item))")
+                    Text("turns \(age) on \(formattedNextBirthday(item))")
                         .font(.caption)
                 } else {
-                    Text("am \(formattedNextBirthday(item))")
+                    Text("on \(formattedNextBirthday(item))")
                         .font(.caption)
                 }
             }
@@ -37,17 +40,3 @@ struct BirthdayItemSubview: View {
         .padding(5)
     }
 }
-
-
-
-//#Preview {
-//    BirthdayItemSubview(
-//        item: CreatePreviewBirthdayKt.createPreviewBirthday(
-//            id: 1,
-//            name: "Shannon Cruz",
-//            day: 4,
-//            month: 10,
-//            year: 2021
-//        )
-//    )
-//}
