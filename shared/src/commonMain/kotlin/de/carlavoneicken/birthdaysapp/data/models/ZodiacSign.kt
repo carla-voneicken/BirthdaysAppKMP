@@ -1,8 +1,5 @@
 package de.carlavoneicken.birthdaysapp.data.models
 
-import kotlinx.datetime.LocalDate
-
-
 enum class ZodiacSign(val description: String) {
     CAPRICORN("capricorn"),
     AQUARIUS("aquarius"),
@@ -17,4 +14,3 @@ enum class ZodiacSign(val description: String) {
     SCORPIO("scorpio"),
     SAGITTARIUS("sagittarius")
 }
-
