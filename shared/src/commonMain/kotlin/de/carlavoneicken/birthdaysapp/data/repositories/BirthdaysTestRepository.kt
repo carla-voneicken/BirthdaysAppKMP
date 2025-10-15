@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class BirthdaysTestRepository(): BirthdaysRepository {
 
@@ -19,7 +17,6 @@ class BirthdaysTestRepository(): BirthdaysRepository {
         Birthday(id = 5, name = "Fred", day = 29, month = 2)
     )
 
-    private val mutex = Mutex()
     private val _birthdays = MutableStateFlow(sampleBirthdays)
 
     override fun observeSingleBirthday(id: Long): Flow<Birthday?> =
@@ -38,7 +35,7 @@ class BirthdaysTestRepository(): BirthdaysRepository {
     override fun observeBirthdaysSortedByUpcoming(): Flow<List<Birthday>> =
         _birthdays.map { list -> list.sortedBy { it.nextBirthday } }.distinctUntilChanged()
 
-    override suspend fun createBirthday(birthday: Birthday): Result<Unit> = mutex.withLock {
+    override suspend fun createBirthday(birthday: Birthday): Result<Unit> {
         // .value gets the current snapshot of the MutableStateFlow _birthdays, .toMutableList() makes
         // a mutable copy (because the original is immutable)
         val current = _birthdays.value.toMutableList()
@@ -49,10 +46,10 @@ class BirthdaysTestRepository(): BirthdaysRepository {
         current += birthday.copy(id = id)
         // updates the _birthdays Flow with the new list -> .value triggers a new emission to all collectors of the Flow
         _birthdays.value = current
-        Result.success(Unit)
+        return Result.success(Unit)
     }
 
-    override suspend fun updateBirthday(birthday: Birthday): Result<Unit> = mutex.withLock {
+    override suspend fun updateBirthday(birthday: Birthday): Result<Unit> {
         val current = _birthdays.value.toMutableList()
         // get the index of the first item of the list where the id matches the provided birthday's id
         // -> if no match is found, it returns '-1'
@@ -61,19 +58,19 @@ class BirthdaysTestRepository(): BirthdaysRepository {
         if (index != -1) {
             current[index] = birthday
             _birthdays.value = current
-            Result.success(Unit)
+            return Result.success(Unit)
         } else {
             // otherwise return a failure
-            Result.failure(NoSuchElementException("Birthday not found: ${birthday.id}"))
+            return Result.failure(NoSuchElementException("Birthday not found: ${birthday.id}"))
         }
     }
 
-    override suspend fun deleteBirthday(birthday: Birthday): Result<Unit> = mutex.withLock {
+    override suspend fun deleteBirthday(birthday: Birthday): Result<Unit> {
         // _birthdays.value creates a snapshot of the Flow -> because this list is immutable, we have to
         // substitute it with a new list instead of mutating it
         // .filterNot{} -> creates a new list containing all elements for which the given condition is FALSE
         // -> aka removes elements where the condition is true
         _birthdays.value = _birthdays.value.filterNot { it.id == birthday.id }
-        Result.success(Unit)
+        return Result.success(Unit)
     }
 }
