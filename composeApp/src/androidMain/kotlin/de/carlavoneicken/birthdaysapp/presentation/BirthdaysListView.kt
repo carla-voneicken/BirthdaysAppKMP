@@ -1,5 +1,6 @@
 package de.carlavoneicken.birthdaysapp.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,10 @@ fun BirthdaysListView() {
 
     var showSortMenu by remember { mutableStateOf(false) }
 
+    // needed for the Toast, just for UI testing purposes
+    val context = LocalContext.current
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -57,6 +63,13 @@ fun BirthdaysListView() {
                     IconButton(onClick = { showSortMenu = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_sort_24),
+                            contentDescription = "Sort"
+                        )
+                    }
+
+                    IconButton(onClick = { Toast.makeText(context, "Pressed settings button", Toast.LENGTH_LONG).show() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_settings_24),
                             contentDescription = "Sort"
                         )
                     }
@@ -125,7 +138,7 @@ fun BirthdaysListView() {
         }
         Box(Modifier.fillMaxSize()) {
             CakeFab(
-                onClick = { /* TODO */ },
+                onClick = { Toast.makeText(context, "Pressed new birthday button", Toast.LENGTH_LONG).show() },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(36.dp)
