@@ -10,10 +10,10 @@ class BirthdaysTestRepository(): BirthdaysRepository {
 
     val sampleBirthdays = listOf(
         Birthday(id = 0, name = "Alice", day = 15, month = 1, year = 1990),
-        Birthday(id = 1, name = "Bob", day = 6, month = 10, year = 1985),
+        Birthday(id = 1, name = "Bob", day = 18, month = 10, year = 1985),
         Birthday(id = 2, name = "Carol", day = 29, month = 2, year = 2000),
         Birthday(id = 3, name = "Dave", day = 31, month = 12, year = 1993),
-        Birthday(id = 4, name = "Eric", day = 7, month = 10),
+        Birthday(id = 4, name = "Eric", day = 17, month = 10),
         Birthday(id = 5, name = "Fred", day = 29, month = 2),
         Birthday(id = 6, name = "Ava", day = 1, month = 2, year = 1992),
         Birthday(id = 7, name = "Hank", day = 10, month = 4, year = 1991),

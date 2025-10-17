@@ -19,7 +19,7 @@ fun getDaysFromNow(date: LocalDate): String {
     return if (days == 0) {
         "Today!"
     } else if (days == 1) {
-        "Tomorrow"
+        "1 day"
     } else if (days < 31) {
         "$days days"
     } else {
