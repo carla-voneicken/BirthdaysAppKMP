@@ -13,23 +13,21 @@ fun getNextBirthday(month: Int, day: Int) : LocalDate? {
     val today = Clock.System.todayIn(timeZone)
     val currentYear: Int = today.year
 
-    // create LocalDate for the birthday this year (catch errors, e.g. Feb 29th in a non-leap year)
-    val birthdayThisYear = try {
-        LocalDate(currentYear, month, day)
-    } catch (e: IllegalArgumentException) {
-        return null
+    fun safeDate(year: Int, month: Int, day: Int): LocalDate {
+        return try {
+            LocalDate(year, month, day)
+        } catch (e: IllegalArgumentException) {
+            // Only Feb 29 is invalid in non-leap years
+            if (month == 2 && day == 29) LocalDate(year, 3, 1)
+            else throw e
+        }
     }
 
+    val birthdayThisYear = safeDate(currentYear, month, day)
+
     return when {
-        // if birthday is TODAY, show birthdayThisYear as next birthday
         today == birthdayThisYear -> birthdayThisYear
-        // if today is after birthday (birthday already happened this year) add a year to it
-        today > birthdayThisYear -> try {
-            LocalDate(currentYear + 1, month, day)
-        } catch (e: IllegalArgumentException) {
-            null
-        }
-        // else (birthday still coming this year) return birthdayThisYear
+        today > birthdayThisYear -> safeDate(currentYear + 1, month, day)
         else -> birthdayThisYear
     }
 }
