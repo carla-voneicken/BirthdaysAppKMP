@@ -11,14 +11,42 @@ import Shared
 
 struct ListScreen: View {
     @StateViewModel var viewmodel = BirthdaysViewModel()
+    @State private var showSortMenu = false
     
     var body: some View {
-        List(viewmodel.uiState.birthdays, id: \.id) { birthday in
-            BirthdayItemSubview(item: birthday)
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                //SortToolbarButton()
+        NavigationStack {
+            List(viewmodel.uiState.birthdays, id: \.id) { birthday in
+                BirthdayItemCard(birthday: birthday)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                    .padding([.leading, .trailing, .top], 12)
+            }
+            .listStyle(.plain)
+            .background(Color(.systemGray6))
+            .navigationTitle("Birthdays")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button(action: {
+                            viewmodel.setSortMode(mode: .byUpcoming)
+                        }) {
+                            Label("Sort by Date", systemImage: "calendar")
+                        }
+                        
+                        Button(action: {
+                            viewmodel.setSortMode(mode: .byName)
+                        }) {
+                            Label("Sort by Name", systemImage: "textformat")
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                            .font(.system(size: 16))
+                            .imageScale(.medium)
+                            .foregroundColor(.primary)
+                    }
+                }
             }
         }
     }

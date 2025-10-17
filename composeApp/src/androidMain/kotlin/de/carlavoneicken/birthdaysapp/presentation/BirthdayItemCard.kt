@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -139,7 +140,7 @@ fun BirthdayItemCard(
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.spacedBy(1.dp)
                 ) {
                     val parts = birthday.daysFromNow.split(" ")
                     if (parts.size == 2) {
@@ -147,12 +148,14 @@ fun BirthdayItemCard(
                         Text(
                             text = parts[0], // The number
                             fontSize = 20.sp,
+                            lineHeight = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                         Text(
                             text = parts[1], // "days" or "months"
                             fontSize = 10.sp,
+                            lineHeight = 10.sp,
                             fontWeight = FontWeight.Medium,
                             color = Color.White
                         )

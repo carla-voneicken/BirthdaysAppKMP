@@ -117,5 +117,4 @@ fun BirthdaysListView() {
             }
         }
     }
-
 }
