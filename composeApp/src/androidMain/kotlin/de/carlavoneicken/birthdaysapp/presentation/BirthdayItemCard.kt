@@ -33,6 +33,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
+import de.carlavoneicken.birthdaysapp.ui.GoldPrimary
+import de.carlavoneicken.birthdaysapp.ui.OrangeAccent
+import de.carlavoneicken.birthdaysapp.ui.TextPrimary
+import de.carlavoneicken.birthdaysapp.ui.TurquoiseSecondary
 import de.carlavoneicken.birthdaysapp.utils.formattedNextBirthday
 import de.carlavoneicken.birthdaysapp.utils.toDrawableRes
 
@@ -43,9 +47,6 @@ fun BirthdayItemCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val zodiacColor = Color(0xFFE8AF1E)
-    val daysColor = Color(0xFF10A098)
-
     // for animation when pressed -> scales a bit down
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -92,7 +93,7 @@ fun BirthdayItemCard(
                     )
                     .border(
                         width = 3.dp,
-                        color = zodiacColor,
+                        color = GoldPrimary,
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -117,7 +118,7 @@ fun BirthdayItemCard(
                     text = birthday.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = TextPrimary
                 )
 
                 Text(
@@ -130,7 +131,7 @@ fun BirthdayItemCard(
                         append(formattedNextBirthday(birthday))
                     },
                     fontSize = 14.sp,
-                    color = zodiacColor,
+                    color = OrangeAccent,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -144,17 +145,17 @@ fun BirthdayItemCard(
                     // "X days" or "X months"
                     Text(
                         text = parts[0], // The number
-                        fontSize = 16.sp,
-                        lineHeight = 14.sp,
+                        fontSize = 18.sp,
+                        lineHeight = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = daysColor
+                        color = TurquoiseSecondary
                     )
                     Text(
                         text = parts[1], // "days" or "months"
                         fontSize = 12.sp,
                         lineHeight = 10.sp,
                         fontWeight = FontWeight.Medium,
-                        color = daysColor
+                        color = TurquoiseSecondary
                     )
                 } else {
                     // "Today" or "Tomorrow"
@@ -162,7 +163,7 @@ fun BirthdayItemCard(
                         text = birthday.daysFromNow,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = daysColor,
+                        color = TurquoiseSecondary,
                         textAlign = TextAlign.Center
                     )
                 }
