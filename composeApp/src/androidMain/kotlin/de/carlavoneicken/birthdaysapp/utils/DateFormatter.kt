@@ -6,8 +6,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private val birthdayFormatter: DateTimeFormatter by lazy {
-    // Matches Swift: "EEEE, d.MMM.yyyy" and uses the current locale
-    DateTimeFormatter.ofPattern("EEEE, d. MMMM yyyy", Locale.getDefault())
+    DateTimeFormatter.ofPattern("EEE, d. MMM YY", Locale.getDefault())
 }
 
 private val isoDateParser: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE // yyyy-MM-dd

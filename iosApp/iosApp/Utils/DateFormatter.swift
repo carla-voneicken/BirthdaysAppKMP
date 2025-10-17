@@ -14,7 +14,7 @@ extension DateFormatter {
         let f = DateFormatter()
         f.locale = Locale.current
         f.timeZone = .current
-        f.dateFormat = "EEEE, d. MMMM yyyy"
+        f.dateFormat = "EEE, d. MMM YY"
         return f
     }()
     
