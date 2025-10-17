@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import de.carlavoneicken.birthdaysapp.R
-import de.carlavoneicken.birthdaysapp.ui.GoldPrimary
+import de.carlavoneicken.birthdaysapp.utils.GoldPrimary
 
 @Composable
 fun CakeFab(

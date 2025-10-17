@@ -1,12 +1,13 @@
 package de.carlavoneicken.birthdaysapp.ui
 
-import androidx.compose.ui.graphics.Color
+object SharedPalette {
+    // ARGB 0xAARRGGBB
+    const val GoldPrimary: Long      = 0xFFE8AF1E
+    const val TurquoiseSecondary: Long = 0xFF10A098
+    const val OrangeAccent: Long     = 0xFFC05418
 
-val GoldPrimary = Color(0xFFE8AF1E)
-val TurquoiseSecondary = Color(0xFF10A098)
-val OrangeAccent = Color(0xFFC05418)
-
-val TextPrimary = Color(0xFF383353)
-val TextSecondary = Color(0xFF757575)
-val BackgroundLight = Color(0xFFF9F9F9)
-val BackgroundDark = Color(0xFF121212)
+    const val TextPrimary: Long      = 0xFF383353
+    const val TextSecondary: Long    = 0xFF757575
+    const val BackgroundLight: Long  = 0xFFF9F9F9
+    const val BackgroundDark: Long   = 0xFF121212
+}
