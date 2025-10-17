@@ -1,8 +1,11 @@
 package de.carlavoneicken.birthdaysapp.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
@@ -10,6 +13,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -58,7 +63,9 @@ fun BirthdaysListView() {
 
                     DropdownMenu(
                         expanded = showSortMenu,
-                        onDismissRequest = { showSortMenu = false }
+                        onDismissRequest = { showSortMenu = false },
+                        Modifier.background(
+                            color = MaterialTheme.colorScheme.background)
                     ) {
                         DropdownMenuItem(
                             text = { Text("Sort by Date") },
@@ -115,6 +122,14 @@ fun BirthdaysListView() {
                     }
                 )
             }
+        }
+        Box(Modifier.fillMaxSize()) {
+            CakeFab(
+                onClick = { /* TODO */ },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(36.dp)
+            )
         }
     }
 }
