@@ -3,6 +3,7 @@ package de.carlavoneicken.birthdaysapp.data.utils
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayIn
+import kotlin.math.round
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -13,10 +14,15 @@ fun getDaysFromNow(date: LocalDate): String {
     val today: LocalDate = Clock.System.todayIn(getSystemTimeZone())
 
     val days = today.daysUntil(date)
+    val months = round(days / 30.0).toInt()
 
-    return when (days) {
-        0 -> "Today"
-        1 -> "Tomorrow"
-        else -> "In ${days}\n days"
+    return if (days == 0) {
+        "Today!"
+    } else if (days == 1) {
+        "Tomorrow"
+    } else if (days < 31) {
+        "$days days"
+    } else {
+        "$months months"
     }
 }
