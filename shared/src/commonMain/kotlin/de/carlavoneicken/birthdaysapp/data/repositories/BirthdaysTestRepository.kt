@@ -14,7 +14,16 @@ class BirthdaysTestRepository(): BirthdaysRepository {
         Birthday(id = 2, name = "Carol", day = 29, month = 2, year = 2000),
         Birthday(id = 3, name = "Dave", day = 31, month = 12, year = 1993),
         Birthday(id = 4, name = "Eric", day = 7, month = 10),
-        Birthday(id = 5, name = "Fred", day = 29, month = 2)
+        Birthday(id = 5, name = "Fred", day = 29, month = 2),
+        Birthday(id = 6, name = "Ava", day = 1, month = 2, year = 1992),
+        Birthday(id = 7, name = "Hank", day = 10, month = 4, year = 1991),
+        Birthday(id = 8, name = "Ivy", day = 12, month = 5),
+        Birthday(id = 9, name = "Jake", day = 10, month = 6),
+        Birthday(id = 10, name = "Kara", day = 1, month = 7),
+        Birthday(id = 11, name = "Liam", day = 8, month = 8),
+        Birthday(id = 12, name = "Mia", day = 1, month = 9),
+        Birthday(id = 13, name = "Nina", day = 1, month = 11),
+        Birthday(id = 14, name = "Owen", day = 10, month = 12)
     )
 
     private val _birthdays = MutableStateFlow(sampleBirthdays)
