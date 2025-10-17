@@ -11,21 +11,18 @@ import Shared
 struct BirthdayItemCard: View {
     let birthday: Birthday
     
-    private let zodiacColor = Color(red: 0.72, green: 0.53, blue: 0.04)
-    private let daysColor = Color(red: 0.04, green: 0.47, blue: 0.45)
-    
     var body: some View {
         HStack(spacing: 16) {
             // Zodiac circle on the left
             ZStack {
                 Circle()
-                    .stroke(zodiacColor, lineWidth: 3)
+                    .stroke(goldPrimary, lineWidth: 3)
                     .frame(width: 60, height: 60)
                 
                 Image(uiImageName(for: birthday.zodiacSign) ?? "BirthdayCake")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    
+                
             }.frame(width: 60, height: 60)
             
             // Name and birthday info
@@ -33,40 +30,32 @@ struct BirthdayItemCard: View {
                 Text(birthday.name)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.black)
+                    .foregroundStyle(textPrimary)
                 
                 Text(
-                    buildText(for: birthday)
+                    buildDateText(for: birthday)
                 )
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(zodiacColor)
-
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(orangeAccent)
                 
             }
             
             Spacer()
             
             // Days countdown badge on the right
-            ZStack {
-                Circle()
-                    .fill(daysColor)
-                    .frame(width: 60, height: 60)
-                
-                VStack(spacing: 0) {
-                    let parts = birthday.daysFromNow.split(separator: " ")
-                    if (parts.count == 2) {
-                        Text(parts[0])
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.white)
-                        Text(parts[1])
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.white)
-
-                        
-                    } else {
-                        Text(birthday.daysFromNow)
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.white)
-                    }
+            VStack(spacing: 0) {
+                let parts = birthday.daysFromNow.split(separator: " ")
+                if (parts.count == 2) {
+                    Text(parts[0])
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(turquoiseSeconday)
+                    Text(parts[1])
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(turquoiseSeconday)
+                } else {
+                    Text(birthday.daysFromNow)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(turquoiseSeconday)
                 }
             }
         }
@@ -76,12 +65,11 @@ struct BirthdayItemCard: View {
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
     
-    private func buildText(for birthday: Birthday) -> String {
+    private func buildDateText(for birthday: Birthday) -> String {
         if let nextAge = birthday.nextAge {
             return "turning \(nextAge) on \(formattedNextBirthday(birthday))"
         } else {
             return "on \(formattedNextBirthday(birthday))"
         }
     }
-
 }

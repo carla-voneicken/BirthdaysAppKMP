@@ -12,21 +12,47 @@ import Shared
 struct ListScreen: View {
     @StateViewModel var viewmodel = BirthdaysViewModel()
     @State private var showSortMenu = false
-    @State private var showAddBirthday = false
     
     var body: some View {
         NavigationStack {
-            List(viewmodel.uiState.birthdays, id: \.id) { birthday in
-                BirthdayItemCard(birthday: birthday)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
-                    .padding([.leading, .trailing, .top], 12)
+            ZStack(alignment: .bottomTrailing) {
+                List(viewmodel.uiState.birthdays, id: \.id) { birthday in
+                    BirthdayItemCard(birthday: birthday)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                        .padding([.leading, .trailing, .top], 12)
+                }
+                .navigationTitle("Birthdays")
+                .navigationBarTitleDisplayMode(.inline)
+                
+                Button {
+                    // Action
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(goldPrimary)
+                            .frame(width: 70, height: 70)
+                            .shadow(color: backgroundDark.opacity(0.4), radius: 8, x: 5, y: 5)
+                        Image("BirthdayCakeShadow")
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.white)
+                        Image(systemName: "plus")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(goldPrimary)
+                            .offset(y: 10)
+                    }
+                    .contentShape(RoundedRectangle(cornerRadius: 10)) // precise hit target
+                }
+                .buttonStyle(PressScaleStyle())
+                .padding(.trailing, 20)
+                .padding()
             }
             .listStyle(.plain)
             .background(Color(.systemGray6))
-            .navigationTitle("Birthdays")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -40,12 +66,6 @@ struct ListScreen: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 12) {
-                        Button(action: {
-                            showAddBirthday = true
-                        }) {
-                            Image(systemName: "plus")
-                                .fontWeight(.semibold)
-                        }
                         Menu {
                             Button(action: {
                                 viewmodel.setSortMode(mode: .byUpcoming)
@@ -66,10 +86,6 @@ struct ListScreen: View {
                         }
                     }
                 }
-            }
-            .sheet(isPresented: $showAddBirthday) {
-                // AddBirthdayView()
-                Text("Add Birthday Form")
             }
         }
     }
