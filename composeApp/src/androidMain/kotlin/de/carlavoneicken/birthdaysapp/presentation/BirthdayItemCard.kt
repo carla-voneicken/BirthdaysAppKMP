@@ -7,8 +7,13 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -31,14 +36,15 @@ import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import de.carlavoneicken.birthdaysapp.utils.formattedNextBirthday
 import de.carlavoneicken.birthdaysapp.utils.toDrawableRes
 
+
 @Composable
 fun BirthdayItemCard(
     birthday: Birthday,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val zodiacColor = Color(0xFFB8860B)
-    val daysColor = Color(0xCC097872)
+    val zodiacColor = Color(0xFFE8AF1E)
+    val daysColor = Color(0xFF10A098)
 
     // for animation when pressed -> scales a bit down
     val interactionSource = remember { MutableInteractionSource() }
@@ -95,7 +101,8 @@ fun BirthdayItemCard(
                     Image(
                         painter = painterResource(id = sign.toDrawableRes()),
                         contentDescription = sign.description,
-                        Modifier.size(50.dp),
+                        Modifier.size(50
+                            .dp),
                         contentScale = ContentScale.Fit
                     )
                 }
@@ -108,7 +115,7 @@ fun BirthdayItemCard(
             ) {
                 Text(
                     text = birthday.name,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
@@ -122,53 +129,42 @@ fun BirthdayItemCard(
                         }
                         append(formattedNextBirthday(birthday))
                     },
-                    fontSize = 13.sp,
+                    fontSize = 14.sp,
                     color = zodiacColor,
                     fontWeight = FontWeight.Medium
                 )
             }
 
-            // Days countdown badge on the right
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(
-                        color = daysColor,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(1.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(1.dp)
-                ) {
-                    val parts = birthday.daysFromNow.split(" ")
-                    if (parts.size == 2) {
-                        // "X days" or "X months"
-                        Text(
-                            text = parts[0], // The number
-                            fontSize = 20.sp,
-                            lineHeight = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Text(
-                            text = parts[1], // "days" or "months"
-                            fontSize = 10.sp,
-                            lineHeight = 10.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White
-                        )
-                    } else {
-                        // "Today" or "Tomorrow"
-                        Text(
-                            text = birthday.daysFromNow,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                val parts = birthday.daysFromNow.split(" ")
+                if (parts.size == 2) {
+                    // "X days" or "X months"
+                    Text(
+                        text = parts[0], // The number
+                        fontSize = 16.sp,
+                        lineHeight = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = daysColor
+                    )
+                    Text(
+                        text = parts[1], // "days" or "months"
+                        fontSize = 12.sp,
+                        lineHeight = 10.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = daysColor
+                    )
+                } else {
+                    // "Today" or "Tomorrow"
+                    Text(
+                        text = birthday.daysFromNow,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = daysColor,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
