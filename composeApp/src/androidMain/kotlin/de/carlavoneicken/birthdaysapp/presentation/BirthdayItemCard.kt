@@ -47,7 +47,7 @@ fun BirthdayItemCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    // for animation when pressed -> scales a bit down
+    // for animation when pressed -> scales items a bit down
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -55,7 +55,6 @@ fun BirthdayItemCard(
         targetValue = if (isPressed) 0.97f else 1f,
         label = "cardScale"
     )
-
 
     Card(
         modifier = modifier
