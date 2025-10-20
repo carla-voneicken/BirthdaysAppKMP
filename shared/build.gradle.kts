@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     id("com.rickclephas.kmp.nativecoroutines") version "1.0.0-ALPHA-46"
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -33,18 +33,15 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            //implementation(libs.koin.compose.viewmodel.navigation)
 
-                implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.coroutines.core)
 
-                api("com.rickclephas.kmp:kmp-observableviewmodel-core:1.0.0-BETA-14")
+            api("com.rickclephas.kmp:kmp-observableviewmodel-core:1.0.0-BETA-14")
 
-                implementation(libs.room.runtime)
-                implementation(libs.sqlite.bundled)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
 
-                implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.datetime)
 
             implementation(libs.components.resources)
         }
@@ -55,7 +52,6 @@ kotlin {
             implementation(libs.koin.android)
         }
         iosMain.dependencies {
-            implementation(libs.koin.core)
         }
     }
 }
