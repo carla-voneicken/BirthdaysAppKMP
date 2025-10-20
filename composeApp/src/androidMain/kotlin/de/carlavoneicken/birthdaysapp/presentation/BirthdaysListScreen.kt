@@ -39,7 +39,7 @@ import de.carlavoneicken.birthdaysapp.business.viewmodels.BirthdaysViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BirthdaysListView() {
+fun BirthdaysListScreen() {
     val viewModel: BirthdaysViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -136,6 +136,8 @@ fun BirthdaysListView() {
                 )
             }
         }
+
+        // Floating Action Button for entering a new birthday
         Box(Modifier.fillMaxSize()) {
             CakeFab(
                 onClick = { Toast.makeText(context, "Pressed new birthday button", Toast.LENGTH_LONG).show() },
