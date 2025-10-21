@@ -39,7 +39,10 @@ import de.carlavoneicken.birthdaysapp.business.viewmodels.BirthdaysViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BirthdaysListScreen() {
+fun BirthdaysListScreen(
+    onAdd: () -> Unit,
+    onEdit: (Long) -> Unit
+) {
     val viewModel: BirthdaysViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -129,10 +132,7 @@ fun BirthdaysListScreen() {
             items(uiState.birthdays) { birthday ->
                 BirthdayItemCard(
                     birthday = birthday,
-                    onClick = {
-                        // Handle click - navigate to detail or edit
-                        println("Clicked on ${birthday.name}")
-                    }
+                    onClick = { onEdit(birthday.id) }
                 )
             }
         }
@@ -140,7 +140,7 @@ fun BirthdaysListScreen() {
         // Floating Action Button for entering a new birthday
         Box(Modifier.fillMaxSize()) {
             CakeFab(
-                onClick = { Toast.makeText(context, "Pressed new birthday button", Toast.LENGTH_LONG).show() },
+                onClick = onAdd,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(36.dp)

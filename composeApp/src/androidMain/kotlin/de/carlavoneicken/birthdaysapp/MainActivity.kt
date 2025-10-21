@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import de.carlavoneicken.birthdaysapp.navigation.AppNavHost
 import de.carlavoneicken.birthdaysapp.presentation.BirthdaysListScreen
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    BirthdaysListScreen()
+                    AppNavHost()
                 }
             }
         }
