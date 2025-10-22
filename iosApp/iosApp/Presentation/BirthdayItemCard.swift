@@ -66,10 +66,12 @@ struct BirthdayItemCard: View {
     }
     
     private func buildDateText(for birthday: Birthday) -> String {
+        let formattedDate = BirthdayFormatterKt.formattedNextBirthday(birthday: birthday, pattern: "EEE, d. MMM yy")
+        
         if let nextAge = birthday.nextAge {
-            return "turning \(nextAge) on \(formattedNextBirthday(birthday))"
+            return "turning \(nextAge) on \(formattedDate)"
         } else {
-            return "on \(formattedNextBirthday(birthday))"
+            return "on \(formattedDate)"
         }
     }
 }

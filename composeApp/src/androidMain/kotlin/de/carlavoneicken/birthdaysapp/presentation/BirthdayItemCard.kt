@@ -33,11 +33,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
+import de.carlavoneicken.birthdaysapp.data.utils.formattedNextBirthday
 import de.carlavoneicken.birthdaysapp.utils.GoldPrimary
 import de.carlavoneicken.birthdaysapp.utils.OrangeAccent
 import de.carlavoneicken.birthdaysapp.utils.TextPrimary
 import de.carlavoneicken.birthdaysapp.utils.TurquoiseSecondary
-import de.carlavoneicken.birthdaysapp.utils.formattedNextBirthday
 import de.carlavoneicken.birthdaysapp.utils.toDrawableRes
 
 
