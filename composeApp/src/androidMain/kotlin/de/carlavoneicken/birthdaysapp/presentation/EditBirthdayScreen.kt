@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,19 +47,21 @@ import de.carlavoneicken.birthdaysapp.utils.GoldPrimary
 import de.carlavoneicken.birthdaysapp.utils.OrangeAccent
 import de.carlavoneicken.birthdaysapp.utils.TextPrimary
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditBirthdayScreen(
     birthdayId: Long? = null, // null for new birthday, id for editing
-    onSave: () -> Unit = {},
-    onCancel: () -> Unit = {},
     onDone: () -> Unit = {}
 ) {
 
     // context for displaying the success message as a toast
     val context = LocalContext.current
-    val viewModel: EditBirthdayViewModel = remember { EditBirthdayViewModel(birthdayId) }
+    val viewModel: EditBirthdayViewModel = koinViewModel {
+        parametersOf(birthdayId)
+    }
     val uiState by viewModel.uiState.collectAsState()
 
     // LaunchedEffect runs a coroutine whenever the key(s) passed to it change
@@ -83,7 +84,8 @@ fun EditBirthdayScreen(
                     Text(
                         text = if (uiState.isNew) "New Birthday" else "Edit Birthday",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
                     )
                 },
                 navigationIcon = {

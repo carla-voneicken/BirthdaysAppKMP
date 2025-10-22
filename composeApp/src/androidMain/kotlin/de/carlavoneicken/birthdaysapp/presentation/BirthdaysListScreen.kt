@@ -33,9 +33,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import de.carlavoneicken.birthdaysapp.R
 import de.carlavoneicken.birthdaysapp.business.viewmodels.BirthdaysViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +43,7 @@ fun BirthdaysListScreen(
     onAdd: () -> Unit,
     onEdit: (Long) -> Unit
 ) {
-    val viewModel: BirthdaysViewModel = viewModel()
+    val viewModel: BirthdaysViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     var showSortMenu by remember { mutableStateOf(false) }
