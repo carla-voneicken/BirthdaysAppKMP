@@ -6,7 +6,7 @@ import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysRepository
 
 class DeleteBirthdayUsecase(private val repo: BirthdaysRepository) {
     @NativeCoroutines
-    suspend operator fun invoke(birthday: Birthday): Result<Unit> {
-        return repo.deleteBirthday(birthday)
+    suspend operator fun invoke(id: Long): Result<Unit> {
+        return repo.deleteBirthdayById(id)
     }
 }

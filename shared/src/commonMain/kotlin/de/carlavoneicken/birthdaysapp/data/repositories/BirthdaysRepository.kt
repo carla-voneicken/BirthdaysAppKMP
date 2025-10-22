@@ -14,5 +14,5 @@ interface BirthdaysRepository {
 
     suspend fun updateBirthday(birthday: Birthday): Result<Unit>
 
-    suspend fun deleteBirthday(birthday: Birthday): Result<Unit>
+    suspend fun deleteBirthdayById(id: Long): Result<Unit>
 }

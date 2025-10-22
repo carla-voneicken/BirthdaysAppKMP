@@ -1,9 +1,9 @@
 package de.carlavoneicken.birthdaysapp.data.repositories
 
 import de.carlavoneicken.birthdaysapp.data.database.BirthdayDao
-import de.carlavoneicken.birthdaysapp.data.utils.toDomain
+import de.carlavoneicken.birthdaysapp.data.models.toDomain
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
-import de.carlavoneicken.birthdaysapp.data.utils.toEntity
+import de.carlavoneicken.birthdaysapp.data.models.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -42,9 +42,9 @@ class BirthdaysRepositoryImpl(private val birthdayDao: BirthdayDao): BirthdaysRe
         }
     }
 
-    override suspend fun deleteBirthday(birthday: Birthday): Result<Unit> {
+    override suspend fun deleteBirthdayById(id: Long): Result<Unit> {
         return try {
-            birthdayDao.deleteBirthday(birthday.toEntity())
+            birthdayDao.deleteById(id)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

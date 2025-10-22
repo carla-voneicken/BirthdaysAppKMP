@@ -26,6 +26,7 @@ interface BirthdayDao {
     @Update
     suspend fun updateBirthday(birthday: BirthdayEntity)
 
-    @Delete
-    suspend fun deleteBirthday(birthday: BirthdayEntity)
+    @Query("DELETE FROM birthdays WHERE id = :id")
+    suspend fun deleteById(id: Long): Int // rows affected
+
 }

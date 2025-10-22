@@ -74,12 +74,12 @@ class BirthdaysTestRepository(): BirthdaysRepository {
         }
     }
 
-    override suspend fun deleteBirthday(birthday: Birthday): Result<Unit> {
+    override suspend fun deleteBirthdayById(id: Long): Result<Unit> {
         // _birthdays.value creates a snapshot of the Flow -> because this list is immutable, we have to
         // substitute it with a new list instead of mutating it
         // .filterNot{} -> creates a new list containing all elements for which the given condition is FALSE
         // -> aka removes elements where the condition is true
-        _birthdays.value = _birthdays.value.filterNot { it.id == birthday.id }
+        _birthdays.value = _birthdays.value.filterNot { it.id == id }
         return Result.success(Unit)
     }
 }
