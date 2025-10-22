@@ -39,11 +39,12 @@ class BirthdayDetailViewModel(
                 .onStart { emit(null) }
                 .collect { birthday ->
                     _uiState.update {
-                        it.copy(
-                            birthday = birthday,
-                            isLoading = false,
-                            errorMessage = if (birthday == null) "Not found" else null
-                        )
+                        when {
+                            birthday != null -> it.copy(birthday = birthday, isLoading = false, errorMessage = null)
+
+                            it.isDeleting -> it.copy(birthday = null, isLoading = false)
+                            else -> it.copy(birthday = null, isLoading = false, errorMessage = "Not found")
+                        }
                     }
                 }
         }
@@ -58,7 +59,7 @@ class BirthdayDetailViewModel(
             _uiState.update { it.copy(isDeleting = true) }
             val result = deleteBirthdayUsecase(birthdayId)
             _uiState.update {
-                if (result.isSuccess) it.copy(successMessage = "Deleted birthday", isDeleting = false)
+                if (result.isSuccess) it.copy(successMessage = "Deleted birthday")
                 else it.copy(errorMessage = result.exceptionOrNull()?.message ?: "Deletion failed", isDeleting = false)
             }
         }
