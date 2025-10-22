@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import de.carlavoneicken.birthdaysapp.presentation.BirthdayDetailScreen
 import de.carlavoneicken.birthdaysapp.presentation.BirthdaysListScreen
 import de.carlavoneicken.birthdaysapp.presentation.EditBirthdayScreen
 
@@ -17,17 +18,43 @@ fun AppNavHost() {
     // NavHost observes NavControllers state -> starts by displaying the startDestination
     NavHost(navController = navController, startDestination = "list") {
 
-        // defining which screen belongs to which route string
-        // when the route is "list" -> show BirthdaysListScreen
+        // List screen displaying all birthdays
         composable("list") {
             BirthdaysListScreen(
                 // when clicking add button, navigate to the edit route for a new item
                 onAdd = { navController.navigate("edit") },
                 // when clicking a birthday item, navigate to edit route for an existing item (providing the id)
-                onEdit = { id -> navController.navigate("edit/$id") }
+                onEdit = { id -> navController.navigate("detail/$id") }
             )
         }
 
+        // Detail screen for a Birthday item
+        composable(
+            route = "detail/{id}",
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.LongType
+                }
+            )
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments!!.getLong("id")
+            BirthdayDetailScreen(
+                birthdayId = id,
+                onDone = { navController.popBackStack() },
+                onRetry =  {
+                    navController.navigate("detail/$id") {
+                        // pops the current instance of the detail screen off the stack, immediately re-navigates
+                        // to the same screen with the same id -> retriggers the ViewModel initialization and reloads the data
+                        // popUpTo(route) -> "go back until you find the screen with this route"
+                        // inclusive = true -> also remove that screen (not just stop before it)
+                        popUpTo("detail/$id") { inclusive = true}
+                    }
+                },
+                onEdit = { navController.navigate("edit/$id") }
+            )
+        }
+
+        // Edit screen for new Birthday item
         composable(
             route ="edit"
         ) {
@@ -37,7 +64,7 @@ fun AppNavHost() {
             )
         }
 
-        //
+        // Edit screen for existing Birthday item
         composable(
             route ="edit/{id}",
             arguments = listOf(
@@ -58,6 +85,7 @@ fun AppNavHost() {
 
 
         // Version that combines editing existing entry and creating a new entry
+
 //        composable(
 //            // Routes.EDIT_ROUTE = "edit?id={id}" -> base path "edit" plus an optional "id" query parameter
 //            route = Routes.EDIT_ROUTE,
