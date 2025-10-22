@@ -2,9 +2,12 @@
 
 package de.carlavoneicken.birthdaysapp.data.utils
 
+import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
 import kotlinx.datetime.todayIn
+import kotlin.math.round
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -32,3 +35,35 @@ fun getNextBirthday(month: Int, day: Int) : LocalDate? {
     }
 }
 
+fun getBirthDate(day: Int, month: Int, year: Int): LocalDate {
+    return LocalDate(year, month, day)
+}
+
+@OptIn(ExperimentalTime::class)
+fun getDaysFromNow(date: LocalDate): String {
+    // Get today as a LocalDate in the current system time zone
+    val today: LocalDate = Clock.System.todayIn(getSystemTimeZone())
+
+    val days = today.daysUntil(date)
+    val months = round(days / 30.0).toInt()
+
+    return if (days == 0) {
+        "Today!"
+    } else if (days == 1) {
+        "1 day"
+    } else if (days < 31) {
+        "$days days"
+    } else {
+        "$months months"
+    }
+}
+
+fun getNextAge(year: Int?, month: Int, day: Int) : Int? {
+    val nextBirthday = getNextBirthday(month, day)
+
+    return if (year != null && nextBirthday != null) {
+        nextBirthday.year - year
+    } else {
+        null
+    }
+}
