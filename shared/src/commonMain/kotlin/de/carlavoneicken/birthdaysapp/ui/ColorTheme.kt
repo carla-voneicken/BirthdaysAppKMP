@@ -7,7 +7,7 @@ object SharedPalette {
     const val OrangeAccent: Long     = 0xFFC95418
 
     const val TextPrimary: Long      = 0xFF383353
-    const val TextSecondary: Long    = 0xFF757575
+    const val TextSecondary: Long    = 0xFF04524D
     const val BackgroundLight: Long  = 0xFFF9F9F9
     const val BackgroundDark: Long   = 0xFF121212
 }

@@ -1,7 +1,6 @@
-package de.carlavoneicken.birthdaysapp.data.utils
+package de.carlavoneicken.birthdaysapp.data.models
 
 import de.carlavoneicken.birthdaysapp.data.database.BirthdayEntity
-import de.carlavoneicken.birthdaysapp.data.models.Birthday
 
 fun BirthdayEntity.toDomain() = Birthday(
     id = id,

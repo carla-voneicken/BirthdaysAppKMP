@@ -20,7 +20,6 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
 
     private val createBirthdayUsecase: CreateBirthdayUsecase by inject()
     private val updateBirthdayUsecase: UpdateBirthdayUsecase by inject()
-
     private val observeSingleBirthdayUsecase: ObserveSingleBirthdayUsecase by inject()
 
     data class UiState(
