@@ -33,6 +33,8 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
 
             implementation(libs.kotlinx.coroutines.core)
 
@@ -50,6 +52,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
+            //implementation(libs.koin.androidx.compose)
         }
         iosMain.dependencies {
         }
@@ -62,6 +65,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // this is added so that I can use java.time even with minsdk 24
+        isCoreLibraryDesugaringEnabled = true
     }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -77,4 +82,7 @@ dependencies {
     add("kspIosSimulatorArm64", libs.room.compiler)
     //add("kspIosX64", libs.room.compiler)
     //add("kspIosArm64", libs.room.compiler)
+
+    // this is added so that I can use java.time even with minsdk 24
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
