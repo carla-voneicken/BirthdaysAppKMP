@@ -41,6 +41,9 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
 
             implementation(libs.kotlinx.datetime)
+
+            implementation(libs.core.splashscreen)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
