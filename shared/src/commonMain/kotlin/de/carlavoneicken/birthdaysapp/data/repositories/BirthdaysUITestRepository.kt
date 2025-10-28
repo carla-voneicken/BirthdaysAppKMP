@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-class BirthdaysTestRepository(): BirthdaysRepository {
+class BirthdaysUITestRepository(): BirthdaysRepository {
 
     val sampleBirthdays = listOf(
         Birthday(id = 0, name = "Alice", day = 15, month = 1, year = 1990),

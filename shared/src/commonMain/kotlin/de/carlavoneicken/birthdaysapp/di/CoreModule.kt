@@ -13,7 +13,7 @@ import de.carlavoneicken.birthdaysapp.data.database.BirthdayDao
 import de.carlavoneicken.birthdaysapp.data.database.BirthdaysDatabase
 import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysRepository
 import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysRepositoryImpl
-import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysTestRepository
+import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysUITestRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -24,7 +24,7 @@ fun coreModule(useFakeData: Boolean = false): Module = module {
     // useFakeData for testing purposes
     if (useFakeData) {
         single<BirthdaysRepository> {
-            BirthdaysTestRepository()
+            BirthdaysUITestRepository()
         }
     } else {
         single<BirthdaysRepository> {
