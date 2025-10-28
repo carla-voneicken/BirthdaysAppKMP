@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		C3E5F6C92E8D120C006C711B /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = ../shared/build/bin/iosSimulatorArm64/debugFramework/Shared.framework; sourceTree = "<group>"; };
-		D1C031B8F8CBB6D48552C939 /* BirthdaysApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BirthdaysApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1C031B8F8CBB6D48552C939 /* CakeDays.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CakeDays.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -75,7 +75,7 @@
 		5310E252FD81CBEB372E72E4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D1C031B8F8CBB6D48552C939 /* BirthdaysApp.app */,
+				D1C031B8F8CBB6D48552C939 /* CakeDays.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,7 +125,7 @@
 				C3E5F6D02E8D146D006C711B /* KMPObservableViewModelSwiftUI */,
 			);
 			productName = iosApp;
-			productReference = D1C031B8F8CBB6D48552C939 /* BirthdaysApp.app */;
+			productReference = D1C031B8F8CBB6D48552C939 /* CakeDays.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -373,6 +373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PRODUCT_NAME = CakeDays;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -403,6 +404,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				PRODUCT_NAME = CakeDays;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

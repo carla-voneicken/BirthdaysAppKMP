@@ -23,7 +23,7 @@ struct ListScreen: View {
                         .listRowBackground(Color.clear)
                         .padding([.leading, .trailing, .top], 12)
                 }
-                .navigationTitle("Birthdays")
+                .navigationTitle("CakeDays")
                 .navigationBarTitleDisplayMode(.inline)
                 
                 Button {

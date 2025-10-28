@@ -75,3 +75,4 @@ struct BirthdayItemCard: View {
         }
     }
 }
+
