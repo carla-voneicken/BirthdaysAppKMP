@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <style name="Theme.BirthdaysApp" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.BirthdaysApp" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <!--<item name="android:windowLightNavigationBar">true</item>-->
     </style>
 </resources>

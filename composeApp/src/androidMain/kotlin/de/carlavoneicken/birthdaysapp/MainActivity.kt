@@ -10,13 +10,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import de.carlavoneicken.birthdaysapp.navigation.AppNavHost
-import de.carlavoneicken.birthdaysapp.presentation.BirthdaysListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        installSplashScreen()
 
         setContent {
             MaterialTheme {
