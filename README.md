@@ -16,7 +16,7 @@ The app is a Kotlin Multiplatform project for Android and iOS. It is being creat
 #### Additional Features
 
 - Save gift ideas
-- Connection to phone contacts / WhatApp
+- Connection to phone contacts / WhatsApp
 - Calendar view
 - Export data
 - Cloud storage
