@@ -22,9 +22,9 @@ fun AppNavHost() {
         composable("list") {
             BirthdaysListScreen(
                 // when clicking add button, navigate to the edit route for a new item
-                onAdd = { navController.navigate("edit") },
+                onAddBirthday = { navController.navigate("edit") },
                 // when clicking a birthday item, navigate to edit route for an existing item (providing the id)
-                onEdit = { id -> navController.navigate("detail/$id") }
+                onEditBirthday = { id -> navController.navigate("detail/$id") }
             )
         }
 
@@ -40,17 +40,8 @@ fun AppNavHost() {
             val id = backStackEntry.arguments!!.getLong("id")
             BirthdayDetailScreen(
                 birthdayId = id,
-                onDone = { navController.popBackStack() },
-                onRetry =  {
-                    navController.navigate("detail/$id") {
-                        // pops the current instance of the detail screen off the stack, immediately re-navigates
-                        // to the same screen with the same id -> retriggers the ViewModel initialization and reloads the data
-                        // popUpTo(route) -> "go back until you find the screen with this route"
-                        // inclusive = true -> also remove that screen (not just stop before it)
-                        popUpTo("detail/$id") { inclusive = true}
-                    }
-                },
-                onEdit = { navController.navigate("edit/$id") }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToEdit = { navController.navigate("edit/$id") }
             )
         }
 

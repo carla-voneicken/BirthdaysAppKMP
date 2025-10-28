@@ -74,86 +74,34 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun BirthdayDetailScreen(
     birthdayId: Long,
-    onDone: () -> Unit = {},
-    onRetry: () -> Unit = {},
-    onEdit: () -> Unit = {}
+    onNavigateBack: () -> Unit,
+    onNavigateToEdit: () -> Unit
 ) {
     val viewModel: BirthdayDetailViewModel = koinViewModel {
         parametersOf(birthdayId)
     }
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    // Handle side effects (navigation, toasts)
+    LaunchedEffect(uiState.successMessage, uiState.errorMessage) {
+        uiState.successMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessages()
+            onNavigateBack()
+        }
+        uiState.errorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessages()
+        }
+    }
 
     BirthdayDetailContent(
         uiState = uiState,
-        onDone = onDone,
-        onRetry = onRetry,
-        onEdit = onEdit,
-        onClearMessages = { viewModel.clearMessages() },
-        onDelete = { viewModel.deleteBirthday() }
-    )
-}
-
-// Top Bar with Deletion functionality (including confirmation dialog)
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BirthdayDetailTopBar(
-    onDone: () -> Unit,
-    onConfirmDelete: () -> Unit
-) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
-
-    if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete birthday") },
-            text = { Text("Are you sure you want to delete this birthday? This action cannot be undone.") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDeleteDialog = false
-                    onConfirmDelete()
-                }) {
-                    Text("Delete", color = Color.Red)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
-                }
-            }
-        )
-    }
-
-    TopAppBar(
-        title = {
-            Text(
-                text = "",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { onDone() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Cancel",
-                    tint = TextPrimary
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { showDeleteDialog = true}) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Birthday",
-                    tint = TextPrimary
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BackgroundLight,
-            titleContentColor = TextPrimary
-        )
+        onNavigateBack = onNavigateBack,
+        onNavigateToEdit = onNavigateToEdit,
+        onDeleteBirthday = { viewModel.deleteBirthday() },
+        onRetryLoad = { viewModel.loadBirthday(birthdayId) }
     )
 }
 
@@ -162,34 +110,32 @@ fun BirthdayDetailTopBar(
 @Composable
 fun BirthdayDetailContent(
     uiState: BirthdayDetailViewModel.UiState,
-    onDone: () -> Unit = {},
-    onRetry: () -> Unit = {},
-    onEdit: () -> Unit = {},
-    onClearMessages: () -> Unit = {},
-    onDelete: () -> Unit = {}
+    onNavigateBack: () -> Unit,
+    onNavigateToEdit: () -> Unit,
+    onDeleteBirthday: () -> Unit,
+    onRetryLoad: () -> Unit
 ) {
-    val context = LocalContext.current
-    LaunchedEffect(uiState.successMessage, uiState.errorMessage) {
-        uiState.successMessage?.let {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-            onClearMessages()
-            onDone()
-        }
-        uiState.errorMessage?.let {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-            onClearMessages()
-        }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        DeleteConfirmationDialog(
+            onConfirm = {
+                showDeleteDialog = false
+                onDeleteBirthday()
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
     }
 
     Scaffold(
         topBar = {
             BirthdayDetailTopBar(
-                onDone = onDone,
-                onConfirmDelete = onDelete
+                onNavigateBack = onNavigateBack,
+                onDeleteClick = { showDeleteDialog = true }
             )
         },floatingActionButton = {
             FloatingActionButton(
-                onClick = onEdit,
+                onClick = onNavigateToEdit,
                 containerColor = GoldPrimary,
                 contentColor = Color.White
             ) {
@@ -209,121 +155,218 @@ fun BirthdayDetailContent(
                 uiState.isLoading ->
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = Color.Black
+                        color = GoldPrimary
                     )
 
-                uiState.birthday == null ->
-                    // Not found state (record deleted, wrong id, etc.)
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Not found", style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(8.dp))
-                        Row {
-                            OutlinedButton(onClick = onDone) { Text("Back") }
-                            Spacer(Modifier.width(8.dp))
-                            OutlinedButton(onClick = onRetry) { Text("Retry") }
-                        }
-                    }
+                // Not found state (record deleted, wrong id, etc.)
+                uiState.birthday == null -> {
+                    NotFoundState(
+                        onNavigateBack = onNavigateBack,
+                        onRetry = onRetryLoad
+                    )
+                }
 
                 else -> {
-                    // we can safely use not-null assertion operator here, because we already
-                    // checked if birthday is null within the when block
+                    // by assigning uiState.birthday to a local val we can safely use the non-null assertion operator
+                    // since we already verified it's not null in the when condition above
                     val birthday = uiState.birthday!!
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        // Zodiac Sign image
-                        Box(
-                            modifier = Modifier
-                                .size(170.dp)
-                                .background(
-                                    color = Color.Transparent,
-                                    shape = CircleShape
-                                )
-                                .border(
-                                    width = 5.dp,
-                                    color = GoldPrimary,
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            birthday.zodiacSign?.let { sign ->
-                                Image(
-                                    painter = painterResource(id = sign.toDrawableRes()),
-                                    contentDescription = sign.description,
-                                    Modifier.size(
-                                        150.dp
-                                    ),
-                                    contentScale = ContentScale.Fit
-                                )
-                            }
-                        }
-
-                        Spacer(Modifier.height(30.dp))
-
-                        Text(
-                            text = birthday.name,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textAlign = TextAlign.Center,
-                            color = TextSecondary
-                        )
-
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = GoldPrimary.copy(alpha = 0.6f)
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 20.dp, horizontal = 20.dp)
-                        ) {
-                            val nextAge = birthday.nextAge
-
-                            if (nextAge != null) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp, vertical = 20.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    InfoChip(
-                                        iconRes = R.drawable.ic_calendar_24,
-                                        label = "Birth date",
-                                        value = formattedBirthDate(birthday),
-                                        modifier = Modifier.weight(2f)   // ← equal width
-                                    )
-                                    InfoChip(
-                                        iconRes = R.drawable.ic_cake_24,
-                                        label = "Age",
-                                        value = (nextAge - 1).toString(),
-                                        modifier = Modifier.weight(1f)   // ← equal width
-                                    )
-                                }
-                            } else {
-                                InfoChip(
-                                    iconRes = R.drawable.ic_calendar_24,
-                                    label = "Birth date",
-                                    value = formattedBirthDate(birthday),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp, vertical = 20.dp)
-                                )
-                            }
-
-
-                        }
-                        Text(
-                            text = playfulCountdown(birthday.daysFromNow),
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            color = OrangeAccent,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    BirthdayDetailView(birthday = birthday)
                 }
             }
+        }
+    }
+}
+// Top Bar with Deletion functionality
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BirthdayDetailTopBar(
+    onNavigateBack: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    TopAppBar(
+        title = {
+            Text(
+                text = "",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = TextPrimary
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = onDeleteClick) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Birthday",
+                    tint = TextPrimary
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = BackgroundLight,
+            titleContentColor = TextPrimary
+        )
+    )
+}
+
+@Composable
+private fun DeleteConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Delete birthday") },
+        text = {
+            Text("Are you sure you want to delete this birthday? This action cannot be undone.")
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Delete", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+private fun NotFoundState(
+    onNavigateBack: () -> Unit,
+    onRetry: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = "Birthday not found",
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
+        )
+        Spacer(Modifier.height(16.dp))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedButton(onClick = onNavigateBack) {
+                Text("Back")
+            }
+            OutlinedButton(onClick = onRetry) {
+                Text("Retry")
+            }
+        }
+    }
+}
+
+@Composable
+private fun BirthdayDetailView(birthday: Birthday) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Zodiac Sign image
+        Box(
+            modifier = Modifier
+                .size(170.dp)
+                .background(
+                    color = Color.Transparent,
+                    shape = CircleShape
+                )
+                .border(
+                    width = 5.dp,
+                    color = GoldPrimary,
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            birthday.zodiacSign?.let { sign ->
+                Image(
+                    painter = painterResource(id = sign.toDrawableRes()),
+                    contentDescription = sign.description,
+                    Modifier.size(
+                        150.dp
+                    ),
+                    contentScale = ContentScale.Fit
+                )
+            }
+        }
+
+        Spacer(Modifier.height(30.dp))
+
+        Text(
+            text = birthday.name,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            color = TextSecondary
+        )
+
+        BirthdayInfoCard(birthday = birthday)
+
+        Text(
+            text = playfulCountdown(birthday.daysFromNow),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            color = OrangeAccent,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
+private fun BirthdayInfoCard(birthday: Birthday) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = GoldPrimary.copy(alpha = 0.6f)
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 20.dp, horizontal = 20.dp)
+    ) {
+        val nextAge = birthday.nextAge
+
+        if (nextAge != null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                InfoChip(
+                    iconRes = R.drawable.ic_calendar_24,
+                    label = "Birth date",
+                    value = formattedBirthDate(birthday),
+                    modifier = Modifier.weight(2f)
+                )
+                InfoChip(
+                    iconRes = R.drawable.ic_cake_24,
+                    label = "Age",
+                    value = (nextAge - 1).toString(),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        } else {
+            InfoChip(
+                iconRes = R.drawable.ic_calendar_24,
+                label = "Birth date",
+                value = formattedBirthDate(birthday),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
+            )
         }
     }
 }
@@ -367,9 +410,9 @@ private fun InfoChip(
 private fun playfulCountdown(daysFromNow: String): String {
     // daysFromNow is like "11 days" or "2 months" or "Today"
     val countdown = daysFromNow.lowercase()
-    return when {
-        countdown == "Today!" -> "🎉 It’s today! Don’t forget to celebrate."
-        countdown == "1 day" -> "🎈 Tomorrow! Time to get the cake ready."
+    return when (countdown) {
+        "Today!" -> "🎉 It’s today! Don’t forget to celebrate."
+        "1 day" -> "🎈 Tomorrow! Time to get the cake ready."
         else -> "⏳ Only $daysFromNow to go — better start planning!"
     }
 }
@@ -389,6 +432,10 @@ fun BirthdayDetailScreenPreview() {
                 year = 1990
             ),
             isLoading = false
-        )
+        ),
+        onNavigateBack = {},
+        onNavigateToEdit = {},
+        onDeleteBirthday = {},
+        onRetryLoad = {}
     )
 }

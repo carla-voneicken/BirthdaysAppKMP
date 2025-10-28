@@ -40,8 +40,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BirthdaysListScreen(
-    onAdd: () -> Unit,
-    onEdit: (Long) -> Unit
+    onAddBirthday: () -> Unit,
+    onEditBirthday: (Long) -> Unit
 ) {
     val viewModel: BirthdaysViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -132,7 +132,7 @@ fun BirthdaysListScreen(
             items(uiState.birthdays) { birthday ->
                 BirthdayItemCard(
                     birthday = birthday,
-                    onClick = { onEdit(birthday.id) }
+                    onClick = { onEditBirthday(birthday.id) }
                 )
             }
         }
@@ -140,7 +140,7 @@ fun BirthdaysListScreen(
         // Floating Action Button for entering a new birthday
         Box(Modifier.fillMaxSize()) {
             CakeFab(
-                onClick = onAdd,
+                onClick = onAddBirthday,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(36.dp)

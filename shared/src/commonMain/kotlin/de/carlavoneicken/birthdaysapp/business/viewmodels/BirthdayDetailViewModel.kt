@@ -8,6 +8,7 @@ import de.carlavoneicken.birthdaysapp.business.usecases.DeleteBirthdayUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveSingleBirthdayUsecase
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
@@ -29,29 +30,43 @@ class BirthdayDetailViewModel(
 
     private val _uiState = MutableStateFlow(viewModelScope, UiState())
     @NativeCoroutinesState
-    val uiState: StateFlow<UiState> = _uiState
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     init {
+        loadBirthday(birthdayId)
+    }
+
+    fun loadBirthday(birthdayId: Long) {
         viewModelScope.launch {
             observeSingleBirthdayUsecase(birthdayId)
                 // onStart is a Flow operator that runs BEFORE the first value is emitted
                 // -> emit(null) sends an initial value into the flow before the database emits anything
                 .onStart { emit(null) }
                 .collect { birthday ->
-                    _uiState.update {
-                        when {
-                            birthday != null -> it.copy(birthday = birthday, isLoading = false, errorMessage = null)
-
-                            it.isDeleting -> it.copy(birthday = null, isLoading = false)
-                            else -> it.copy(birthday = null, isLoading = false, errorMessage = "Not found")
+                    // don't update UI if we're in the middle of deleting
+                    if (!_uiState.value.isDeleting) {
+                        _uiState.update {
+                            when {
+                                birthday != null -> it.copy(
+                                    birthday = birthday,
+                                    isLoading = false,
+                                    errorMessage = null
+                                )
+                                // Only show error if we're not in initial loading state
+                                it.isLoading -> it.copy(
+                                    birthday = null,
+                                    isLoading = true  // Keep loading state
+                                )
+                                else -> it.copy(
+                                    birthday = null,
+                                    isLoading = false,
+                                    errorMessage = "Not found"
+                                )
+                            }
                         }
                     }
                 }
         }
-    }
-
-    private fun updateState(update: UiState.() -> UiState) {
-        _uiState.value = _uiState.value.update()
     }
 
     fun deleteBirthday() {
