@@ -7,40 +7,35 @@
 
 import SwiftUI
 
+// MARK: Toast Struct
+struct Toast: Equatable {
+    var message: String
+    var duration: Double = 2
+    var width: Double = .infinity
+}
+
 // MARK: ToastView
 struct ToastView: View {
     
-    var style: ToastStyle
     var message: String
     var width = CGFloat.infinity
-    var onCancelTapped: (() -> Void)
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(systemName: style.iconFileName)
-                .foregroundColor(style.themeColor)
+            Image(systemName: "checkmark.circle")
+                .foregroundColor(Color(goldPrimary))
                 .font(.system(size: 20))
             Text(message)
-                .font(.system(size: 15))
+                .font(.system(size: 16))
                 .foregroundColor(.primary)
                 .multilineTextAlignment(.leading)
-            
-            Spacer(minLength: 10)
-            
-            Button {
-                onCancelTapped()
-            } label: {
-                Image(systemName: "xmark")
-                    .foregroundStyle(.secondary)
-                    .font(.system(size: 18))
-            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
-        .frame(minWidth: 0, maxWidth: width)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(.thinMaterial)
+                .fill(.ultraThinMaterial)
+                .stroke(Color(goldPrimary), lineWidth: 2)
         )
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 4)
         .padding(.horizontal, 16)
@@ -61,43 +56,37 @@ struct ToastModifier: ViewModifier {
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             // overlay draws the toast ON TOP of the screens content
-            .overlay(
-                ZStack {
-                    mainToastView()
-                }.animation(.spring(), value: toast)
-            )
+            .overlay() {
+                ZStack(alignment: .top) {
+                    // This expands the overlay to the full size of `content`
+                    if toast != nil {
+                        Color.black.opacity(0.1)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                dismissToast()
+                            }
+                    }
+
+                    if let toast {
+                        ToastView(
+                            message: toast.message,
+                            width: toast.width
+                        )
+                        .padding(.top, 16)
+//                        .allowsHitTesting(false)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                }
+            }
+            .animation(.spring(), value: toast != nil)
             // calls showToast when state of toast changes
-            .onChange(of: toast) { _, value in
+            .onChange(of: toast) { _, _ in
                 showToast()
             }
     }
     
-    // helper that builds the visual toast when toast != nil
-    @ViewBuilder func mainToastView() -> some View {
-        if let toast = toast {
-//            ZStack {
-//                Color.black.opacity(0.01)
-//                    .ignoresSafeArea()
-//                    .onTapGesture {
-//                        dismissToast()
-//                    }
-                ToastView(
-                    style: toast.style,
-                    message: toast.message,
-                    width: toast.width
-                ) {
-                    // a callback for manual dismiss (e.g. tapping th x on the toast)
-                    dismissToast()
-                }
-//            }
-        }
-    }
-    
     private func showToast() {
         guard let toast = toast else { return }
-        
-        UIImpactFeedbackGenerator(style: .light)
-            .impactOccurred()
         
         // if the toast specifies a positive duration -> cancel any existing scheduled dismissal, create a new DispatchWorkItem that calls dismissToast(), schedule it to run on the main queue after toast.duration seconds
         if toast.duration > 0 {
@@ -114,10 +103,7 @@ struct ToastModifier: ViewModifier {
     
     // dismisses toast by setting binding to nil, cancels any pending timer so it won#t try to dismiss again later
     private func dismissToast() {
-        withAnimation {
-            toast = nil
-        }
-        
+        withAnimation { toast = nil }
         workItem?.cancel()
         workItem = nil
     }
@@ -125,46 +111,7 @@ struct ToastModifier: ViewModifier {
 
 // MARK: extension links view modifier and the Toast struct instance
 extension View {
-
   func toastView(toast: Binding<Toast?>) -> some View {
     self.modifier(ToastModifier(toast: toast))
   }
-}
-
-
-
-// MARK: Toast Struct
-struct Toast: Equatable {
-    var style: ToastStyle
-    var message: String
-    var duration: Double = 3
-    var width: Double = .infinity
-}
-
-// MARK: Toast Style
-enum ToastStyle {
-    case error
-    case warning
-    case success
-    case info
-}
-
-extension ToastStyle {
-    var themeColor: Color {
-        switch self {
-        case .error: return Color.red
-        case .warning: return Color.orange
-        case .info: return Color.blue
-        case .success: return Color.green
-        }
-    }
-    
-    var iconFileName: String {
-        switch self {
-        case .info: return "info.circle.fill"
-        case .warning: return "exclamationmark.triangle.fill"
-        case .success: return "checkmark.circle.fill"
-        case .error: return "xmark.circle.fill"
-        }
-    }
 }

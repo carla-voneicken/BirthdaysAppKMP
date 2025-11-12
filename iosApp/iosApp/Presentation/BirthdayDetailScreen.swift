@@ -64,13 +64,13 @@ struct BirthdayDetailScreen: View {
         .onChange(of: viewModel.uiState.successMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                onShowToast?(Toast(style: .success, message: message, width: 260))
+                onShowToast?(Toast(message: message, width: 260))
                 dismiss()
             }
         }
         .onChange(of: viewModel.uiState.errorMessage) { _, message in
             if let message {
-                toast = Toast(style: .error, message: message, width: 260)
+                toast = Toast(message: message, width: 260)
                 viewModel.clearMessages()
             }
         }
