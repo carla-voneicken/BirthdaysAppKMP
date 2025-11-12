@@ -313,6 +313,13 @@ private fun BirthdayDetailView(birthday: Birthday) {
             color = TextSecondary
         )
 
+        Text(
+            text = birthday.zodiacSign?.description?.replaceFirstChar(Char::uppercase) ?: "",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center,
+            color = GoldPrimary
+        )
         BirthdayInfoCard(birthday = birthday)
 
         Text(
