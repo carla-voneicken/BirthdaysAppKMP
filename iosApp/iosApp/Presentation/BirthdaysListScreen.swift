@@ -9,22 +9,44 @@ import SwiftUI
 import KMPObservableViewModelSwiftUI
 import Shared
 
-struct ListScreen: View {
+struct BirthdaysListScreen: View {
     @StateViewModel var viewmodel = BirthdaysViewModel()
     @State private var showSortMenu = false
+    
+    @State private var toast: Toast?
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 List(viewmodel.uiState.birthdays, id: \.id) { birthday in
-                    BirthdayItemCard(birthday: birthday)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
-                        .padding([.leading, .trailing, .top], 12)
+                    ZStack {
+                        // "invisible" NavigationLink so it's still tappable, but doesn't show a chevron on the side
+                        NavigationLink(value: birthday.id) {
+                            EmptyView()
+                        }
+                        .opacity(0)
+                        .buttonStyle(.plain)
+                        // actual Card that should be displayed
+                        BirthdayItemCard(birthday: birthday)
+                    }
+                    .padding([.leading, .trailing, .top], 12)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                }
+                .listStyle(.plain)
+                .navigationDestination(for: Int64.self) { birthdayId in
+                    BirthdayDetailScreen(
+                        birthdayId: birthdayId,
+                        onShowToast: { toastMessage in
+                            toast = toastMessage
+                        }
+                    )
                 }
                 .navigationTitle("CakeDays")
                 .navigationBarTitleDisplayMode(.inline)
+                // display a toast if an item was successfully deleted in the Detail view
+                .toastView(toast: $toast)
                 
                 Button {
                     // Action
@@ -94,6 +116,6 @@ struct ListScreen: View {
 
 
 #Preview {
-    ListScreen()
+    BirthdaysListScreen()
 }
 
