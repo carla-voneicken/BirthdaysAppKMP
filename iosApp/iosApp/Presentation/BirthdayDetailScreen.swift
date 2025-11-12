@@ -121,19 +121,30 @@ private struct BirthdayDetailScrollView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 30) {
+            VStack() {
                 Spacer().frame(height: 30)
                 
                 ZodiacSignImage(zodiacSign: birthday.zodiacSign?.description_)
-                
+                    .padding(.bottom, 20)
                 Text(birthday.name)
                     .font(.system(size: 30, weight: .semibold))
                     .foregroundColor(Color(textSecondary))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
+                    .padding(.bottom, 0)
+                
+                let zodiacSignName = birthday.zodiacSign?.description_ ?? ""
+                Text(zodiacSignName.capitalized)
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(Color(goldPrimary))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    .padding(.bottom, 20)
                 
                 BirthdayInfoCard(birthday: birthday)
                     .padding(.horizontal, 20)
+                    .padding(.bottom, 25)
+
                 
                 Text(playfulCountdown(daysFromNow: birthday.daysFromNow))
                     .font(.system(size: 16, weight: .medium))
@@ -179,13 +190,20 @@ private struct BirthdayInfoCard: View {
                         label: "Birth date",
                         value: BirthdayFormatterKt.formattedBirthDate(birthday: birthday)
                     )
-                    
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .layoutPriority(2)   // “heavier” like weight 2f
+                    .lineLimit(1)
+
                     InfoChip(
                         iconName: "birthday.cake",
                         label: "Age",
                         value: "\(nextAge - 1)"
                     )
+                    .frame(minWidth: 80, maxWidth: .infinity, alignment: .leading)
+                    .layoutPriority(1)   // “lighter” like weight 1f
+                    .lineLimit(1)
                 }
+                .frame(maxWidth: .infinity) // make the whole row fill horizontally
                 .padding(20)
             } else {
                 InfoChip(
@@ -221,6 +239,7 @@ private struct InfoChip: View {
                     .font(.system(size: 16))
                     .foregroundColor(Color(textPrimary))
             }
+            .padding(.bottom, 5)
             
             Text(value)
                 .font(.system(size: 18, weight: .medium))
