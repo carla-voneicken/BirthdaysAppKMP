@@ -21,8 +21,7 @@ struct BirthdayItemCard: View {
                 
                 Image(uiImageName(for: birthday.zodiacSign) ?? "BirthdayCake")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                
+                    .frame(width: 50, height: 50)
             }.frame(width: 60, height: 60)
             
             // Name and birthday info
@@ -74,5 +73,10 @@ struct BirthdayItemCard: View {
             return "on \(formattedDate)"
         }
     }
+}
+
+
+#Preview {
+    BirthdayItemCard(birthday: CreatePreviewBirthdayKt.createPreviewBirthday(id: 1, name: "Shannon Cruz", day: 4, month: 10, year: 2021))
 }
 

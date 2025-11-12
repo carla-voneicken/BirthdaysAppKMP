@@ -54,8 +54,7 @@ class BirthdayDetailViewModel(
                                 )
                                 // Only show error if we're not in initial loading state
                                 it.isLoading -> it.copy(
-                                    birthday = null,
-                                    isLoading = true  // Keep loading state
+                                    birthday = null
                                 )
                                 else -> it.copy(
                                     birthday = null,

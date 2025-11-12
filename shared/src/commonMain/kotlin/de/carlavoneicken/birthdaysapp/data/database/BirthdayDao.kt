@@ -1,11 +1,9 @@
 package de.carlavoneicken.birthdaysapp.data.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,6 +25,6 @@ interface BirthdayDao {
     suspend fun updateBirthday(birthday: BirthdayEntity)
 
     @Query("DELETE FROM birthdays WHERE id = :id")
-    suspend fun deleteById(id: Long): Int // rows affected
+    suspend fun deleteById(id: Long): Int
 
 }
