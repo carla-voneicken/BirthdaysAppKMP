@@ -28,27 +28,27 @@ fun coreModule(useFakeData: Boolean = false): Module = module {
         }
     } else {
         single<BirthdaysRepository> {
-            BirthdaysRepositoryImpl(get())
+            BirthdaysRepositoryImpl()
         }
     }
 
     single<CreateBirthdayUsecase> {
-        CreateBirthdayUsecase(get())
+        CreateBirthdayUsecase()
     }
     single<DeleteBirthdayUsecase> {
-        DeleteBirthdayUsecase(get())
+        DeleteBirthdayUsecase()
     }
     single<ObserveBirthdaysSortedByNameUsecase> {
-        ObserveBirthdaysSortedByNameUsecase(get())
+        ObserveBirthdaysSortedByNameUsecase()
     }
     single<ObserveBirthdaysSortedByUpcomingUsecase> {
-        ObserveBirthdaysSortedByUpcomingUsecase(get())
+        ObserveBirthdaysSortedByUpcomingUsecase()
     }
     single<ObserveSingleBirthdayUsecase> {
-        ObserveSingleBirthdayUsecase(get())
+        ObserveSingleBirthdayUsecase()
     }
     single<UpdateBirthdayUsecase> {
-        UpdateBirthdayUsecase(get())
+        UpdateBirthdayUsecase()
     }
 
     viewModel { BirthdaysViewModel() }

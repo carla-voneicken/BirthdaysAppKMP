@@ -6,8 +6,12 @@ import de.carlavoneicken.birthdaysapp.data.models.Birthday
 import de.carlavoneicken.birthdaysapp.data.models.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class BirthdaysRepositoryImpl(private val birthdayDao: BirthdayDao): BirthdaysRepository {
+class BirthdaysRepositoryImpl(): BirthdaysRepository, KoinComponent {
+
+    private val birthdayDao: BirthdayDao by inject()
 
     override fun observeSingleBirthday(id: Long): Flow<Birthday?> =
         birthdayDao.observeSingleBirthday(id)
