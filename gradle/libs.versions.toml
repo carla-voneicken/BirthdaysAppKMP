@@ -31,6 +31,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "componentsResources" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koinCore" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }

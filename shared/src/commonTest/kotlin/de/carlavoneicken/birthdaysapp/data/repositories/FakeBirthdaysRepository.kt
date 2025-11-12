@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
     birthdaysFlow.update { it + birthday }
 }
 
- =
+ DAS GLEICHE WIE:
 
 try {
     birthdaysFlow.update { it + birthday }
@@ -19,13 +19,23 @@ try {
     Result.failure(e)
 }
  */
-class FakeBirthdaysRepository(
-    initialBirthdays: List<Birthday> = emptyList()
-) : BirthdaysRepository {
+class FakeBirthdaysRepository() : BirthdaysRepository {
+
+    var sampleBirthdays: List<Birthday> = listOf(
+        Birthday(id = 1, name = "Lina", day = 12, month = 4, year = 1993),
+        Birthday(id = 2, name = "Lauren", day = 31, month = 12, year = 1992),
+        Birthday(id = 3, name = "Stine", day = 22, month = 2, year = 1993),
+        Birthday(id = 4, name = "Lene", day = 18, month = 8, year = 1992)
+    )
 
     // Backing in-memory list exposed as a StateFlow
-    private val birthdaysFlow = MutableStateFlow(initialBirthdays)
+    private val birthdaysFlow = MutableStateFlow(sampleBirthdays)
     var shouldThrowOnCreate = false
+
+    // clear saved birthdays to test the result for empty lists
+    fun clear() {
+        birthdaysFlow.value = emptyList()
+    }
 
     override fun observeSingleBirthday(id: Long): Flow<Birthday?> =
         birthdaysFlow.map { list -> list.find { it.id == id } }
