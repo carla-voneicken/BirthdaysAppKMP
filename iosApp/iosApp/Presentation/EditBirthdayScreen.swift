@@ -146,14 +146,14 @@ struct EditBirthdayScreen: View {
         .onChange(of: viewModel.uiState.successMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                toastCenter.show(Toast(message: message, width: 260))
+                toastCenter.show(Toast(message: message, width: 260, type: .success))
                 dismiss()
             }
         }
         .onChange(of: viewModel.uiState.errorMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                toastCenter.show(Toast(message: message, width: 260))
+                toastCenter.show(Toast(message: message, width: 260, type: .error))
             }
         }
     }

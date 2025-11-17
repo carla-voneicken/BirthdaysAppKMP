@@ -7,11 +7,26 @@
 
 import SwiftUI
 
+enum ToastType {
+    case success
+    case error
+}
+
+extension ToastType {
+    var iconFileName: String {
+        switch self {
+        case .success: return "checkmark.circle"
+        case .error: return "exclamationmark.triangle"
+        }
+    }
+}
+
 // MARK: Toast Struct
 struct Toast: Equatable {
     var message: String
     var duration: Double = 2
     var width: Double = .infinity
+    var type: ToastType
 }
 
 // MARK: ToastView
@@ -19,12 +34,13 @@ struct ToastView: View {
     
     var message: String
     var width = CGFloat.infinity
+    var type: ToastType
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(systemName: "checkmark.circle")
-                .foregroundColor(Color(goldPrimary))
-                .font(.system(size: 20))
+            Image(systemName: type.iconFileName)
+                    .foregroundColor(Color(goldPrimary))
+                    .font(.system(size: 20))
             Text(message)
                 .font(.system(size: 16))
                 .foregroundColor(.primary)
@@ -70,10 +86,10 @@ struct ToastModifier: ViewModifier {
                     if let toast {
                         ToastView(
                             message: toast.message,
-                            width: toast.width
+                            width: toast.width,
+                            type: toast.type
                         )
                         .padding(.top, 16)
-//                        .allowsHitTesting(false)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                 }
