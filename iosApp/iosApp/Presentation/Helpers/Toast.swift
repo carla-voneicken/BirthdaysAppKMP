@@ -34,7 +34,7 @@ struct ToastView: View {
         .padding(.vertical, 16)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(.ultraThinMaterial)
+                .fill(.white.opacity(0.9))
                 .stroke(Color(goldPrimary), lineWidth: 2)
         )
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 4)
