@@ -23,6 +23,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+            binaryOption("bundleId", "de.carlavoneicken.birthdaysapp.shared")
         }
     }
     
@@ -55,7 +56,6 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
-            //implementation(libs.koin.androidx.compose)
         }
         iosMain.dependencies {
         }

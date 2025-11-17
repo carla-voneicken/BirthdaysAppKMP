@@ -7,25 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C3E5F6CA2E8D120C006C711B /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E5F6C92E8D120C006C711B /* Shared.framework */; };
-		C3E5F6CB2E8D120C006C711B /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C3E5F6C92E8D120C006C711B /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C36749C42EC61ACD0076D229 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E5F6C92E8D120C006C711B /* Shared.framework */; };
 		C3E5F6CF2E8D146D006C711B /* KMPObservableViewModelCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3E5F6CE2E8D146D006C711B /* KMPObservableViewModelCore */; };
 		C3E5F6D12E8D146D006C711B /* KMPObservableViewModelSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C3E5F6D02E8D146D006C711B /* KMPObservableViewModelSwiftUI */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C3E5F6CC2E8D120C006C711B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C3E5F6CB2E8D120C006C711B /* Shared.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C3E5F6C92E8D120C006C711B /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = ../shared/build/bin/iosSimulatorArm64/debugFramework/Shared.framework; sourceTree = "<group>"; };
@@ -64,8 +49,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3E5F6D12E8D146D006C711B /* KMPObservableViewModelSwiftUI in Frameworks */,
+				C36749C42EC61ACD0076D229 /* Shared.framework in Frameworks */,
 				C3E5F6CF2E8D146D006C711B /* KMPObservableViewModelCore in Frameworks */,
-				C3E5F6CA2E8D120C006C711B /* Shared.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +95,6 @@
 				5BD83EBEEF409564E2BF1AE2 /* Sources */,
 				FFBF26E4774381C5CCF423B9 /* Frameworks */,
 				C8F85B77A5E91222A58CA19C /* Resources */,
-				C3E5F6CC2E8D120C006C711B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -136,7 +120,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					A7653CA9B3FBAD7895FEBA80 = {
 						CreatedOnToolsVersion = 16.2;
@@ -212,7 +196,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# --- Skip KMP embed/sign when SwiftUI previews are building ---\nif [ \"${ENABLE_PREVIEWS}\" = \"YES\" ] || [ \"${XCODE_RUNNING_FOR_PREVIEWS}\" = \"1\" ]; then\n  echo \"🔕 Skipping :shared:embedAndSignAppleFrameworkForXcode for SwiftUI Previews\"\n  exit 0\nfi\n# --- end guard ---\n\ncd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "# --- Skip KMP embed/sign when SwiftUI previews are building ---\n# if [ \"${ENABLE_PREVIEWS}\" = \"YES\" ] || [ \"${XCODE_RUNNING_FOR_PREVIEWS}\" = \"1\" ]; then\n#  echo \"🔕 Skipping :shared:embedAndSignAppleFrameworkForXcode for SwiftUI Previews\"\n#  exit 0\n#fi\n# --- end guard ---\n\ncd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -288,6 +272,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -347,6 +332,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -389,7 +375,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/../shared/build/bin/iosSimulatorArm64/debugFramework/**";
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iosApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

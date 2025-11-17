@@ -14,9 +14,7 @@ import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class BirthdayDetailViewModel(
-    private val birthdayId: Long
-): ViewModel(), KoinComponent {
+class BirthdayDetailViewModel(private val birthdayId: Long): ViewModel(), KoinComponent {
     private val observeSingleBirthdayUsecase: ObserveSingleBirthdayUsecase by inject()
     private val deleteBirthdayUsecase: DeleteBirthdayUsecase by inject()
 

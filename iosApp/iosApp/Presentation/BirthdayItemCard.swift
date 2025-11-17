@@ -76,7 +76,7 @@ struct BirthdayItemCard: View {
 }
 
 
-#Preview {
-    BirthdayItemCard(birthday: CreatePreviewBirthdayKt.createPreviewBirthday(id: 1, name: "Shannon Cruz", day: 4, month: 10, year: 2021))
-}
+//#Preview {
+//    BirthdayItemCard(birthday: CreatePreviewBirthdayKt.createPreviewBirthday(id: 1, name: "Shannon Cruz", day: 4, month: 10, year: 2021))
+//}
 
