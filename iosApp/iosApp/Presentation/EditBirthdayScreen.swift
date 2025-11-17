@@ -13,14 +13,11 @@ struct EditBirthdayScreen: View {
     let birthdayId: Int64?
     @StateViewModel var viewModel: EditBirthdayViewModel
     
-    @State private var toast: Toast? = nil
-    let onShowToast: ((Toast) -> Void)?
-    
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var toastCenter: ToastCenter
     
-    init(birthdayId: Int64?, onShowToast: ((Toast) -> Void)? = nil) {
+    init(birthdayId: Int64?) {
         self.birthdayId = birthdayId
-        self.onShowToast = onShowToast
         
         let kotlinBirthdayId: KotlinLong? = if let id = birthdayId {
             KotlinLong(value: id)
@@ -149,17 +146,16 @@ struct EditBirthdayScreen: View {
         .onChange(of: viewModel.uiState.successMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                onShowToast?(Toast(message: message, width: 260))
+                toastCenter.show(Toast(message: message, width: 260))
                 dismiss()
             }
         }
         .onChange(of: viewModel.uiState.errorMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                toast = Toast(message: message, width: 260)
+                toastCenter.show(Toast(message: message, width: 260))
             }
         }
-        .toastView(toast: $toast)
     }
 }
 

@@ -12,7 +12,7 @@ import Shared
 struct BirthdaysListScreen: View {
     @StateViewModel var viewmodel = BirthdaysViewModel()
     @State private var showSortMenu = false
-    @State private var listToast: Toast?
+    @EnvironmentObject private var toastCenter: ToastCenter
     
     var body: some View {
         NavigationStack {
@@ -37,10 +37,7 @@ struct BirthdaysListScreen: View {
                 .listStyle(.plain)
                 .navigationDestination(for: Int64.self) { birthdayId in
                     BirthdayDetailScreen(
-                        birthdayId: birthdayId,
-                        onShowToast: { toastMessage in
-                            listToast = toastMessage
-                        }
+                        birthdayId: birthdayId
                     )
                 }
                 .navigationTitle("CakeDays")
@@ -92,8 +89,6 @@ struct BirthdaysListScreen: View {
                     }
                 }
             }
-            // display a toast if an item was successfully deleted in the Detail view
-            .toastView(toast: $listToast)
         }
     }
 }

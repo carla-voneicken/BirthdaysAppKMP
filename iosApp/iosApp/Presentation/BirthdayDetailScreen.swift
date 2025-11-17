@@ -15,14 +15,12 @@ struct BirthdayDetailScreen: View {
     @StateViewModel var viewModel: BirthdayDetailViewModel
     
     @Environment(\.dismiss) private var dismiss
-
-    @State private var detailToast: Toast? = nil
-    let onShowToast: ((Toast) -> Void)?
+    @EnvironmentObject private var toastCenter: ToastCenter
+    
     @State var showDeleteDialog = false
     
-    init(birthdayId: Int64, onShowToast: ((Toast) -> Void)? = nil) {
+    init(birthdayId: Int64) {
         self.birthdayId = birthdayId
-        self.onShowToast = onShowToast
         _viewModel = StateViewModel(
             wrappedValue: BirthdayDetailViewModel(birthdayId: birthdayId)
         )
@@ -32,8 +30,7 @@ struct BirthdayDetailScreen: View {
         BirthdayDetailContent(
             uiState: viewModel.uiState,
             onDelete: { viewModel.deleteBirthday() },
-            onRetry: { viewModel.loadBirthday(birthdayId: birthdayId) },
-            onShowToast: onShowToast
+            onRetry: { viewModel.loadBirthday(birthdayId: birthdayId) }
         )
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -68,17 +65,16 @@ struct BirthdayDetailScreen: View {
         .onChange(of: viewModel.uiState.successMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                onShowToast?(Toast(message: message, width: 260))
+                toastCenter.show(Toast(message: message, width: 260))
                 dismiss()
             }
         }
         .onChange(of: viewModel.uiState.errorMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                detailToast = Toast(message: message, width: 260)
+                toastCenter.show(Toast(message: message, width: 260))
             }
         }
-        .toastView(toast: $detailToast)
     }
 }
 
@@ -87,7 +83,6 @@ private struct BirthdayDetailContent: View {
     let uiState: BirthdayDetailViewModel.UiState
     let onDelete: () -> Void
     let onRetry: () -> Void
-    let onShowToast: ((Toast) -> Void)?
     
     var body: some View {
         ZStack {
@@ -102,11 +97,7 @@ private struct BirthdayDetailContent: View {
                     // Overlay with Edit-Birthday-Button
                     .overlay(alignment: .bottomTrailing) {
                         NavigationLink(
-                            destination: EditBirthdayScreen(
-                                birthdayId: birthday.id,
-                                onShowToast: { toastMessage in
-                                    detailToast = toastMessage
-                                })
+                            destination: EditBirthdayScreen(birthdayId: birthday.id)
                         ) {
                             Image(systemName: "pencil")
                                 .foregroundColor(.white)
