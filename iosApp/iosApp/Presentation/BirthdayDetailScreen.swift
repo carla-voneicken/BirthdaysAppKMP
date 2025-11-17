@@ -16,7 +16,7 @@ struct BirthdayDetailScreen: View {
     
     @Environment(\.dismiss) private var dismiss
 
-    @State private var toast: Toast? = nil
+    @State private var detailToast: Toast? = nil
     let onShowToast: ((Toast) -> Void)?
     @State var showDeleteDialog = false
     
@@ -32,10 +32,12 @@ struct BirthdayDetailScreen: View {
         BirthdayDetailContent(
             uiState: viewModel.uiState,
             onDelete: { viewModel.deleteBirthday() },
-            onRetry: { viewModel.loadBirthday(birthdayId: birthdayId) }
+            onRetry: { viewModel.loadBirthday(birthdayId: birthdayId) },
+            onShowToast: onShowToast
         )
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            // Back button
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.left")
@@ -43,6 +45,7 @@ struct BirthdayDetailScreen: View {
                 }
             }
             
+            // Delete button
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { showDeleteDialog = true }) {
                     Image(systemName: "trash")
@@ -50,6 +53,7 @@ struct BirthdayDetailScreen: View {
                 }
             }
         }
+        // Delete birthday alert
         .alert("Delete birthday", isPresented: $showDeleteDialog) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
@@ -60,7 +64,7 @@ struct BirthdayDetailScreen: View {
             Text("Are you sure you want to delete this birthday? This action cannot be undone.")
         }
 
-        // Check if the uiState for success- or errormessage changes
+        // Check if the uiState for success- or errormessage changes and if so, display a toast
         .onChange(of: viewModel.uiState.successMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
@@ -70,11 +74,11 @@ struct BirthdayDetailScreen: View {
         }
         .onChange(of: viewModel.uiState.errorMessage) { _, message in
             if let message {
-                toast = Toast(message: message, width: 260)
                 viewModel.clearMessages()
+                detailToast = Toast(message: message, width: 260)
             }
         }
-        .toastView(toast: $toast)
+        .toastView(toast: $detailToast)
     }
 }
 
@@ -83,7 +87,8 @@ private struct BirthdayDetailContent: View {
     let uiState: BirthdayDetailViewModel.UiState
     let onDelete: () -> Void
     let onRetry: () -> Void
-        
+    let onShowToast: ((Toast) -> Void)?
+    
     var body: some View {
         ZStack {
             Color(backgroundLight).ignoresSafeArea()
@@ -94,17 +99,25 @@ private struct BirthdayDetailContent: View {
                     .scaleEffect(1.5)
             } else if let birthday = uiState.birthday {
                 BirthdayDetailScrollView(birthday: birthday)
+                    // Overlay with Edit-Birthday-Button
                     .overlay(alignment: .bottomTrailing) {
-                        NavigationLink(destination: EditBirthdayScreen(birthdayId: birthday.id)) {
+                        NavigationLink(
+                            destination: EditBirthdayScreen(
+                                birthdayId: birthday.id,
+                                onShowToast: { toastMessage in
+                                    detailToast = toastMessage
+                                })
+                        ) {
                             Image(systemName: "pencil")
                                 .foregroundColor(.white)
-                                .font(.system(size: 20))
-                                .frame(width: 56, height: 56)
+                                .font(.system(size: 36))
+                                .frame(width: 60, height: 60)
                                 .background(Color(goldPrimary))
                                 .clipShape(Circle())
                                 .shadow(radius: 4)
                         }
                         .padding()
+                        .padding(.trailing, 15)
                     }
             } else {
                 NotFoundStateView(
@@ -208,7 +221,7 @@ private struct BirthdayInfoCard: View {
             } else {
                 InfoChip(
                     iconName: "calendar",
-                    label: "Birth date",
+                    label: "Birthdate",
                     value: BirthdayFormatterKt.formattedBirthDate(birthday: birthday)
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -237,13 +250,13 @@ private struct InfoChip: View {
                 
                 Text(label)
                     .font(.system(size: 16))
-                    .foregroundColor(Color(textPrimary))
+                    .foregroundStyle(Color(textPrimary))
             }
             .padding(.bottom, 5)
             
             Text(value)
                 .font(.system(size: 18, weight: .medium))
-                .foregroundColor(Color(textPrimary))
+                .foregroundStyle(Color(textPrimary))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)
@@ -306,8 +319,4 @@ private func playfulCountdown(daysFromNow: String) -> String {
     default:
         return "⏳ Only \(daysFromNow) to go — better start planning!"
     }
-}
-
-#Preview {
-    BirthdayDetailScreen(birthdayId: 1)
 }
