@@ -134,7 +134,7 @@ fun EditBirthdayScreen(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_person_24),
-                    contentDescription = "Sort",
+                    contentDescription = "Person",
                     tint = OrangeAccent
                 )
                 Text(
@@ -167,7 +167,7 @@ fun EditBirthdayScreen(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_calendar_24),
-                    contentDescription = "Sort",
+                    contentDescription = "Calendar",
                     tint = OrangeAccent
                 )
                 Text(
@@ -228,7 +228,7 @@ fun EditBirthdayScreen(
                     },
                     label = { Text("Year") },
                     placeholder = { Text("YYYY") },
-                    //supportingText = { Text("Optional") },
+                    supportingText = { Text("Optional") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.weight(1.2f),
