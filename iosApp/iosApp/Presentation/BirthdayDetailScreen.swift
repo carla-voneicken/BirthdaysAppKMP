@@ -65,14 +65,14 @@ struct BirthdayDetailScreen: View {
         .onChange(of: viewModel.uiState.successMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                toastCenter.show(Toast(message: message, width: 260, type: .success))
+                toastCenter.success(message)
                 dismiss()
             }
         }
         .onChange(of: viewModel.uiState.errorMessage) { _, message in
             if let message {
                 viewModel.clearMessages()
-                toastCenter.show(Toast(message: message, width: 260, type: .error))
+                toastCenter.error(message)
             }
         }
     }
@@ -139,7 +139,7 @@ private struct BirthdayDetailScrollView: View {
                 
                 let zodiacSignName = birthday.zodiacSign?.description_ ?? ""
                 Text(zodiacSignName.capitalized)
-                    .font(.system(size: 24, weight: .semibold))
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(Color(goldPrimary))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)

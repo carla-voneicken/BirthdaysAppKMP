@@ -7,14 +7,16 @@ struct iOSApp: App {
     @StateObject private var toastCenter = ToastCenter()
 
     init() {
-        KoinHelperKt.doInitKoinIos(useFakeData: true)
+        KoinHelperKt.doInitKoinIos(useFakeData: false)
     }
 
     var body: some Scene {
         WindowGroup {
             BirthdaysListScreen()
-                .environmentObject(toastCenter)          // inject globally
-                .toastView(toast: $toastCenter.toast)    // single global toast
+            // create global object toastCenter
+                .environmentObject(toastCenter)
+            // $toastCenter.toast is a binding to the toastCenters' toast
+                .modifier(ToastModifier(toast: $toastCenter.toast))
         }
     }
 }
