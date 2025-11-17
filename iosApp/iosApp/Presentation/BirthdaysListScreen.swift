@@ -12,12 +12,12 @@ import Shared
 struct BirthdaysListScreen: View {
     @StateViewModel var viewmodel = BirthdaysViewModel()
     @State private var showSortMenu = false
-    
-    @State private var toast: Toast?
+    @State private var listToast: Toast?
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
+                // MARK: List of Birthdays
                 List(viewmodel.uiState.birthdays, id: \.id) { birthday in
                     ZStack {
                         // "invisible" NavigationLink so it's still tappable, but doesn't show a chevron on the side
@@ -39,35 +39,16 @@ struct BirthdaysListScreen: View {
                     BirthdayDetailScreen(
                         birthdayId: birthdayId,
                         onShowToast: { toastMessage in
-                            toast = toastMessage
+                            listToast = toastMessage
                         }
                     )
                 }
                 .navigationTitle("CakeDays")
                 .navigationBarTitleDisplayMode(.inline)
-                // display a toast if an item was successfully deleted in the Detail view
-                .toastView(toast: $toast)
-                
-                Button {
-                    // Action
-                } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(goldPrimary)
-                            .frame(width: 70, height: 70)
-                            .shadow(color: backgroundDark.opacity(0.4), radius: 8, x: 5, y: 5)
-                        Image("BirthdayCakeShadow")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white)
-                        Image(systemName: "plus")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundStyle(goldPrimary)
-                            .offset(y: 10)
-                    }
-                    .contentShape(RoundedRectangle(cornerRadius: 10)) // precise hit target
+                           
+                // MARK: Floating Action Button for creating a new birthday
+                NavigationLink(destination: EditBirthdayScreen(birthdayId: nil)) {
+                    CustomFAB()
                 }
                 .buttonStyle(PressScaleStyle())
                 .padding(.trailing, 20)
@@ -76,6 +57,7 @@ struct BirthdaysListScreen: View {
             .listStyle(.plain)
             .background(Color(.systemGray6))
             .toolbar {
+                // MARK: Settings Button
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         print("Settings tapped")
@@ -86,6 +68,7 @@ struct BirthdaysListScreen: View {
                             .foregroundColor(.primary)
                     }
                 }
+                // MARK: Sort Menu
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack(spacing: 12) {
                         Menu {
@@ -109,13 +92,8 @@ struct BirthdaysListScreen: View {
                     }
                 }
             }
+            // display a toast if an item was successfully deleted in the Detail view
+            .toastView(toast: $listToast)
         }
     }
 }
-
-
-
-#Preview {
-    BirthdaysListScreen()
-}
-
