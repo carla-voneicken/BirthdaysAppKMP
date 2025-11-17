@@ -31,6 +31,7 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
         val errorMessage: String? = null,
         val successMessage: String? = null
     ) {
+        // computed property isNew -> true if the id is null
         val isNew: Boolean get() = id == null
     }
 
@@ -39,6 +40,7 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     init {
+        // if the birthdayId is not null (aka if user wants to edit an existing birthday), load that data
         if (birthdayId != null) {
             loadBirthday(birthdayId)
         }
@@ -89,18 +91,21 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
 
     fun saveBirthday() {
         val currentState = _uiState.value
+        // values the user entered in the text fields
         val birthdayInput = BirthdayInput(
             name = currentState.name,
             day = currentState.day,
             month = currentState.month,
             year = currentState.year.ifBlank { null }
         )
-        val validationResult = validateBirthdayInput(birthdayInput)
 
-        when (validationResult) {
+        // validate input (e.g. if it represents a valid date)
+        when (val validationResult = validateBirthdayInput(birthdayInput)) {
+            // if validation was successful, save the new or updated birthday to the database
             is BirthdayValidationResult.Success -> {
+                // convert birthday from a BirthdayInput object to a Birthday object that can be saved
                 var birthday = birthdayInput.toDomain()
-                // If editing, preserve the ID
+                // If editing (aka the current id is not null), preserve the id
                 if (currentState.id != null) {
                     birthday = birthday.copy(id = currentState.id)
                 }
@@ -108,16 +113,17 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
                     if (currentState.isNew) {
                         // New birthday
                         createBirthdayUsecase(birthday)
-                            .onSuccess { updateState { copy(successMessage = "Geburtstag gespeichert!") } }
-                            .onFailure { e -> updateState { copy(errorMessage = "Fehler: ${e.message}") } }
+                            .onSuccess { updateState { copy(successMessage = "Birthday saved.") } }
+                            .onFailure { e -> updateState { copy(errorMessage = "Error: ${e.message}") } }
                     } else {
                         // Existing birthday
                         updateBirthdayUsecase(birthday)
-                            .onSuccess { updateState { copy(successMessage = "Geburtstag aktualisiert!") } }
-                            .onFailure { e -> updateState { copy(errorMessage = "Fehler: ${e.message}") } }
+                            .onSuccess { updateState { copy(successMessage = "Birthday updated.") } }
+                            .onFailure { e -> updateState { copy(errorMessage = "Error: ${e.message}") } }
                     }
                 }
             }
+            // if the validation returns an error, save it to uiState and to display it
             is BirthdayValidationResult.Error -> {
                 updateState { copy(errorMessage = validationResult.message) }
             }
