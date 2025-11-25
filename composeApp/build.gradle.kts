@@ -27,6 +27,10 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.material)
             implementation(libs.androidx.appcompat)
+
+            implementation(libs.androidx.core.ktx)
+
+            implementation("androidx.work:work-runtime-ktx:2.11.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)

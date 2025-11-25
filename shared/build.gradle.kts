@@ -47,6 +47,10 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             implementation(libs.components.resources)
+
+            implementation(libs.room.runtime)
+            implementation("androidx.room:room-ktx:2.8.2")
+            implementation("androidx.room:room-common:2.8.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
