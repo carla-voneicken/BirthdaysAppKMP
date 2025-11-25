@@ -9,7 +9,7 @@ class BirthdaysApp: Application() {
         super.onCreate()
         initKoin(
             appDeclaration = { androidContext(this@BirthdaysApp) },
-            useFakeData = false
+            useFakeData = true
         )
     }
 }
