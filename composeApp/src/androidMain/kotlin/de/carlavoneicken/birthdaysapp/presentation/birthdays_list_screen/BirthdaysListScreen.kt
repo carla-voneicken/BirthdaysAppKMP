@@ -1,4 +1,4 @@
-package de.carlavoneicken.birthdaysapp.presentation
+package de.carlavoneicken.birthdaysapp.presentation.birthdays_list_screen
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +47,7 @@ fun BirthdaysListScreen(
     val viewModel: BirthdaysViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    var showSortMenu by remember { mutableStateOf(false) }
+    var showSortMenu by rememberSaveable { mutableStateOf(false) }
 
     // needed for the Toast, just for UI testing purposes
     val context = LocalContext.current

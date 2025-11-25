@@ -6,9 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import de.carlavoneicken.birthdaysapp.presentation.BirthdayDetailScreen
-import de.carlavoneicken.birthdaysapp.presentation.BirthdaysListScreen
-import de.carlavoneicken.birthdaysapp.presentation.EditBirthdayScreen
+import de.carlavoneicken.birthdaysapp.presentation.birthday_detail_screen.BirthdayDetailScreen
+import de.carlavoneicken.birthdaysapp.presentation.birthdays_list_screen.BirthdaysListScreen
+import de.carlavoneicken.birthdaysapp.presentation.edit_birthday_screen.EditBirthdayScreen
 
 @Composable
 fun AppNavHost() {

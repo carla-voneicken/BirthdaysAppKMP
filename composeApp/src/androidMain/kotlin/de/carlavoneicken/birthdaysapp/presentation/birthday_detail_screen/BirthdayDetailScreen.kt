@@ -1,4 +1,4 @@
-package de.carlavoneicken.birthdaysapp.presentation
+package de.carlavoneicken.birthdaysapp.presentation.birthday_detail_screen
 
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -43,6 +43,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -115,7 +116,7 @@ fun BirthdayDetailContent(
     onDeleteBirthday: () -> Unit,
     onRetryLoad: () -> Unit
 ) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showDeleteDialog) {
         DeleteConfirmationDialog(
