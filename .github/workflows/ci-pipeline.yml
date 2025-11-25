@@ -1,0 +1,42 @@
+# Ein Name für unseren Workflow, der in der GitHub UI angezeigt wird
+name: Build and Test KMP
+
+# Die Events, die diesen Workflow auslösen
+on:
+  push:
+    branches: [ "develop" ] # Bei jedem Push auf den "develop"-Branch
+  pull_request:
+    branches: [ "develop" ] # Bei jedem Pull Request, der auf "develop" zielt
+
+# Eine Liste von einem oder mehreren Jobs, die ausgeführt werden sollen
+jobs:
+  # Der Name unseres Jobs (frei wählbar)
+  build-and-test:
+    # Der Typ des Runners, auf dem der Job laufen soll.
+    # Für Gradle-Tasks ohne iOS-Bezug ist Linux schnell und günstig.
+    runs-on: ubuntu-latest
+
+    # Eine Liste der Schritte, die in diesem Job ausgeführt werden
+    steps:
+      # Step 1: Den Code aus dem Repository auschecken
+      # Nutzt eine vorgefertigte Action von GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Java (JDK) einrichten, wird von Gradle benötigt
+      # Nutzt eine weitere offizielle Action
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Dem Gradle Wrapper Ausführungsrechte geben
+      # Ein häufig notwendiger Schritt auf Linux/macOS Runnern
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+
+      # Step 4: Die Tests des shared-Moduls ausführen
+      # Das ist das Herzstück unserer CI-Pipeline
+      - name: Run Unit Tests
+        run: ./gradlew :shared:check
