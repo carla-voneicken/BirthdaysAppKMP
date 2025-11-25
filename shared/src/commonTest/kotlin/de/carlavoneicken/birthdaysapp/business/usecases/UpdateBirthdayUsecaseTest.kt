@@ -13,11 +13,14 @@ import kotlin.test.assertTrue
 class UpdateBirthdayUsecaseTest: BaseKoinTest() {
 
     private val repo: BirthdaysRepository by inject<BirthdaysRepository>()
-    private var usecase = UpdateBirthdayUsecase()
+    private var usecase = UpdateBirthdayWithRemindersUsecase()
 
     @Test
     fun `updateBirthday returns success`() = runTest {
-        val result = usecase(Birthday(0L, "Alice", 1, 3, 1990))
+        val result = usecase(
+            Birthday(0L, "Alice", 1, 3, 1990),
+            emptyList()
+        )
 
         assertTrue(result.isSuccess)
     }
@@ -30,7 +33,10 @@ class UpdateBirthdayUsecaseTest: BaseKoinTest() {
         val fakeRepo = repo as FakeBirthdaysRepository
         fakeRepo.shouldThrowOnCreate = true   // simulate DB exception
 
-        val result = usecase(Birthday(1, "Alice", 1, 3, 1990))
+        val result = usecase(
+            Birthday(1, "Alice", 1, 3, 1990),
+            emptyList()
+        )
 
         assertTrue(result.isFailure)
         assertThat("Simulated database error").equals(result.exceptionOrNull()?.message)
