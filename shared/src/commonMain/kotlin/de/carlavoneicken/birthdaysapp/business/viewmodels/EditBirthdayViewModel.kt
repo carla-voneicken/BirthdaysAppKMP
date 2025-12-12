@@ -1,5 +1,6 @@
 package de.carlavoneicken.birthdaysapp.business.viewmodels
 
+import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import com.rickclephas.kmp.nativecoroutines.NativeCoroutinesState
 import com.rickclephas.kmp.observableviewmodel.MutableStateFlow
 import com.rickclephas.kmp.observableviewmodel.ViewModel
@@ -12,12 +13,22 @@ import de.carlavoneicken.birthdaysapp.data.models.toReminderUiState
 import de.carlavoneicken.birthdaysapp.data.models.toRemindersDomain
 import de.carlavoneicken.birthdaysapp.data.utils.BirthdayValidationResult
 import de.carlavoneicken.birthdaysapp.data.utils.validateBirthdayInput
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
+// BirthdaySaved is one kind of EditBirthdayEffect -> that's why it implements the sealed interface it is actually part of
+// we might later add other effects like ShowError or NavigateBack
+sealed interface EditBirthdayEffect {
+    data class BirthdaySaved(
+        val remindersEnabled: Boolean
+    ) : EditBirthdayEffect
+}
 
 class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
 
@@ -58,6 +69,10 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
     private val _uiState = MutableStateFlow(viewModelScope, UiState(id = birthdayId))
     @NativeCoroutinesState
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
+    private val _effects = MutableSharedFlow<EditBirthdayEffect>()
+    @NativeCoroutines
+    val effects: SharedFlow<EditBirthdayEffect> = _effects
 
     init {
         // if the birthdayId is not null (aka if user wants to edit an existing birthday), load that data
@@ -174,17 +189,37 @@ class EditBirthdayViewModel(birthdayId: Long?): ViewModel(), KoinComponent {
                 )
 
                 viewModelScope.launch {
-                    if (currentState.isNew) {
+                    val result = if (currentState.isNew) {
                         // New birthday
                         createBirthdayUsecase(birthday, reminders)
-                            .onSuccess { updateState { copy(successMessage = "Birthday saved.") } }
-                            .onFailure { e -> updateState { copy(errorMessage = "Error: ${e.message}") } }
                     } else {
                         // Existing birthday
                         updateBirthdayUsecase(birthday, reminders)
-                            .onSuccess { updateState { copy(successMessage = "Birthday updated.") } }
-                            .onFailure { e -> updateState { copy(errorMessage = "Error: ${e.message}") } }
                     }
+
+                    result
+                        .onSuccess {
+                            updateState {
+                                copy(
+                                    successMessage = if (currentState.isNew) "Birthday saved." else "Birthday updated.",
+                                    errorMessage = null
+                                )
+                            }
+
+                            _effects.emit(
+                                EditBirthdayEffect.BirthdaySaved(
+                                    remindersEnabled = currentState.reminders.remindMe
+                                )
+                            )
+                        }
+                        .onFailure { e ->
+                            updateState {
+                                copy(
+                                    errorMessage = "Error: ${e.message}",
+                                    successMessage = null
+                                )
+                            }
+                        }
                 }
             }
             // if the validation returns an error, save it to uiState and to display it
