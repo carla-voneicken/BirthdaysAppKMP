@@ -1,19 +1,27 @@
 package de.carlavoneicken.birthdaysapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import de.carlavoneicken.birthdaysapp.presentation.BirthdayDetailScreen
-import de.carlavoneicken.birthdaysapp.presentation.BirthdaysListScreen
-import de.carlavoneicken.birthdaysapp.presentation.EditBirthdayScreen
+import de.carlavoneicken.birthdaysapp.presentation.birthday_detail_screen.BirthdayDetailScreen
+import de.carlavoneicken.birthdaysapp.presentation.birthdays_list_screen.BirthdaysListScreen
+import de.carlavoneicken.birthdaysapp.presentation.edit_birthday_screen.EditBirthdayScreen
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(birthdayIdFromNotification: Long) {
     // creates and remembers a NavController which tracks the current screen (route) and the navigation stack (back stack)
     val navController = rememberNavController()
+
+    // handle auto-navigation when starting the app by tapping a notification
+    LaunchedEffect(birthdayIdFromNotification) {
+        if (birthdayIdFromNotification != -1L) {
+            navController.navigate("detail/$birthdayIdFromNotification")
+        }
+    }
 
     // NavHost observes NavControllers state -> starts by displaying the startDestination
     NavHost(navController = navController, startDestination = "list") {

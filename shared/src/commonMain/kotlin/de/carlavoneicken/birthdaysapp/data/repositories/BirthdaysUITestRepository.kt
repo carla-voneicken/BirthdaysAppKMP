@@ -1,8 +1,11 @@
 package de.carlavoneicken.birthdaysapp.data.repositories
 
 import de.carlavoneicken.birthdaysapp.data.models.Birthday
+import de.carlavoneicken.birthdaysapp.data.models.BirthdayWithReminders
+import de.carlavoneicken.birthdaysapp.data.models.Reminder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -26,7 +29,17 @@ class BirthdaysUITestRepository(): BirthdaysRepository {
         Birthday(id = 14, name = "Owen", day = 10, month = 12)
     )
 
+    val sampleReminders = listOf(
+        Reminder(id = 1, birthdayId = 1, daysBefore = 0),
+        Reminder(id = 2, birthdayId = 1, daysBefore = 1),
+        Reminder(id = 3, birthdayId = 3, daysBefore = 0),
+        Reminder(id = 4, birthdayId = 4, daysBefore = 0),
+        Reminder(id = 5, birthdayId = 4, daysBefore = 3),
+        Reminder(id = 6, birthdayId = 6, daysBefore = 1)
+    )
+
     private val _birthdays = MutableStateFlow(sampleBirthdays)
+    private val _reminders = MutableStateFlow(sampleReminders)
 
     override fun observeSingleBirthday(id: Long): Flow<Birthday?> =
         /*
@@ -38,40 +51,103 @@ class BirthdaysUITestRepository(): BirthdaysRepository {
          */
         _birthdays.map { list -> list.firstOrNull { it.id == id } }.distinctUntilChanged()
 
+    override fun observeSingleBirthdayWithReminders(id: Long): Flow<BirthdayWithReminders?> =
+        /*
+        combine is a Flow operator from Kotlin coroutines -> it takes two flows, listens to both flows
+        and every time EITHER of them change, it calls the lambda with their latest values
+         */
+        combine(_birthdays, _reminders) { birthdays, reminders ->
+            /*
+            birthdays.firstOrNull -> looks through the birthdays list and returns the FIRST birthday
+            where the id matches (or null)
+            If null is returned, return from the lambda passed to combine, not from the whole function
+            -> if there is no birthday with that id, the whole combine lambda produces null and SKIPS the code below
+             */
+            val birthday = birthdays.firstOrNull { it.id == id } ?: return@combine null
+            // reminders.filter -> goes through current list of reminders and keeps only those where the id matches
+            val birthdayReminders = reminders.filter { it.birthdayId == id }
+            // create a BirthdayWithReminders object
+            BirthdayWithReminders(
+                birthday = birthday,
+                reminders = birthdayReminders
+            )
+            // distinctUntilChanged prevents duplicate emission -> only emits if different from previous emission
+        }.distinctUntilChanged()
+
     override fun observeBirthdaysSortedByName(): Flow<List<Birthday>> =
         _birthdays.map { list -> list.sortedBy { it.name.lowercase() } }.distinctUntilChanged()
 
     override fun observeBirthdaysSortedByUpcoming(): Flow<List<Birthday>> =
         _birthdays.map { list -> list.sortedBy { it.nextBirthday } }.distinctUntilChanged()
 
-    override suspend fun createBirthday(birthday: Birthday): Result<Unit> {
-        // .value gets the current snapshot of the MutableStateFlow _birthdays, .toMutableList() makes
-        // a mutable copy (because the original is immutable)
-        val current = _birthdays.value.toMutableList()
-        // determine the id of the new birthday -> if the given id is 0L or null, find the highest existing
-        // id and increase by one, otherwise use the already existing valid id
-        val id = if (birthday.id == 0L) (current.maxOfOrNull { it.id } ?: 0L) + 1 else birthday.id
-        // add the new birthday to the list -> copy(id=id) creates a copy of the provided birthday object with the correct id value
-        current += birthday.copy(id = id)
-        // updates the _birthdays Flow with the new list -> .value triggers a new emission to all collectors of the Flow
-        _birthdays.value = current
+    override suspend fun createBirthdayWithReminders(
+        birthday: Birthday,
+        reminders: List<Reminder>
+    ): Result<Unit> {
+        val currentBirthdays = _birthdays.value.toMutableList()
+        val currentReminders = _reminders.value.toMutableList()
+
+        // generate new birthday id if needed
+        val newBirthdayId =
+            if (birthday.id == 0L) (currentBirthdays.maxOfOrNull { it.id } ?: 0L) + 1
+            else birthday.id
+
+        val birthdayWithId = birthday.copy(id = newBirthdayId)
+        currentBirthdays += birthdayWithId
+
+        // generate reminder ids
+        var nextReminderId = (currentReminders.maxOfOrNull { it.id } ?: 0L) + 1
+        val remindersWithIds = reminders.map { reminder ->
+            reminder.copy(
+                id = nextReminderId++,
+                birthdayId = newBirthdayId
+            )
+        }
+        currentReminders += remindersWithIds
+
+        _birthdays.value = currentBirthdays
+        _reminders.value = currentReminders
+
         return Result.success(Unit)
     }
 
-    override suspend fun updateBirthday(birthday: Birthday): Result<Unit> {
-        val current = _birthdays.value.toMutableList()
-        // get the index of the first item of the list where the id matches the provided birthday's id
-        // -> if no match is found, it returns '-1'
-        val index = current.indexOfFirst { it.id == birthday.id }
-        // as long as a match was found, update the list with the new birthday
-        if (index != -1) {
-            current[index] = birthday
-            _birthdays.value = current
-            return Result.success(Unit)
-        } else {
-            // otherwise return a failure
+
+    override suspend fun updateBirthdayWithReminders(
+        birthday: Birthday,
+        reminders: List<Reminder>
+    ): Result<Unit> {
+        val currentBirthdays = _birthdays.value.toMutableList()
+        val currentReminders = _reminders.value.toMutableList()
+
+        val index = currentBirthdays.indexOfFirst { it.id == birthday.id }
+        if (index == -1) {
             return Result.failure(NoSuchElementException("Birthday not found: ${birthday.id}"))
         }
+
+        // 1) update birthday
+        currentBirthdays[index] = birthday
+
+        // 2) remove old reminders for this birthday
+        val filteredReminders = currentReminders.filterNot { it.birthdayId == birthday.id }
+
+        // 3) add new reminders
+        val mutableFiltered = filteredReminders.toMutableList()
+        var nextReminderId = (mutableFiltered.maxOfOrNull { it.id } ?: 0L) + 1
+
+        val remindersWithIds = reminders.map { reminder ->
+            // if reminder.id == 0 treat as new, else keep id
+            val id = if (reminder.id == 0L) nextReminderId++ else reminder.id
+            reminder.copy(
+                id = id,
+                birthdayId = birthday.id
+            )
+        }
+        mutableFiltered += remindersWithIds
+
+        _birthdays.value = currentBirthdays
+        _reminders.value = mutableFiltered
+
+        return Result.success(Unit)
     }
 
     override suspend fun deleteBirthdayById(id: Long): Result<Unit> {

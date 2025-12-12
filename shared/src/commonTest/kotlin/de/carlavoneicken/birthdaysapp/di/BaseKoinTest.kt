@@ -1,11 +1,11 @@
 package de.carlavoneicken.birthdaysapp.di
 
-import de.carlavoneicken.birthdaysapp.business.usecases.CreateBirthdayUsecase
+import de.carlavoneicken.birthdaysapp.business.usecases.CreateBirthdayWithRemindersUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.DeleteBirthdayUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveBirthdaysSortedByNameUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveBirthdaysSortedByUpcomingUsecase
 import de.carlavoneicken.birthdaysapp.business.usecases.ObserveSingleBirthdayUsecase
-import de.carlavoneicken.birthdaysapp.business.usecases.UpdateBirthdayUsecase
+import de.carlavoneicken.birthdaysapp.business.usecases.UpdateBirthdayWithRemindersUsecase
 import de.carlavoneicken.birthdaysapp.data.repositories.BirthdaysRepository
 import de.carlavoneicken.birthdaysapp.data.repositories.FakeBirthdaysRepository
 import org.koin.core.context.startKoin
@@ -33,8 +33,8 @@ abstract class BaseKoinTest: KoinTest {
     open fun testModule() = module {
         single<BirthdaysRepository> { FakeBirthdaysRepository() }
 
-        single<CreateBirthdayUsecase> {
-            CreateBirthdayUsecase()
+        single<CreateBirthdayWithRemindersUsecase> {
+            CreateBirthdayWithRemindersUsecase()
         }
         single<DeleteBirthdayUsecase> {
             DeleteBirthdayUsecase()
@@ -48,8 +48,8 @@ abstract class BaseKoinTest: KoinTest {
         single<ObserveSingleBirthdayUsecase> {
             ObserveSingleBirthdayUsecase()
         }
-        single<UpdateBirthdayUsecase> {
-            UpdateBirthdayUsecase()
+        single<UpdateBirthdayWithRemindersUsecase> {
+            UpdateBirthdayWithRemindersUsecase()
         }
     }
 }

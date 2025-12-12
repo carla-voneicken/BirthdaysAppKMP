@@ -17,13 +17,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        // if the user opens the app via tapping a reminder, the id of that birthday is provided via the intent
+        val startDestinationArgs = intent.getLongExtra("birthdayId", -1)
+
         setContent {
             MaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavHost()
+                    AppNavHost(startDestinationArgs)
                 }
             }
         }

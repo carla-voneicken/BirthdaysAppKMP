@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c736892a529346c8eadbc915f4862f00",
+    "identityHash": "aaf746a53906e2b63e9d50ca54bf08cc",
     "entities": [
       {
         "tableName": "birthdays",
@@ -44,11 +44,70 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "reminders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `birthdayId` INTEGER NOT NULL, `daysBefore` INTEGER NOT NULL, `lastTriggeredDate` TEXT, FOREIGN KEY(`birthdayId`) REFERENCES `birthdays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "birthdayId",
+            "columnName": "birthdayId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "daysBefore",
+            "columnName": "daysBefore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastTriggeredDate",
+            "columnName": "lastTriggeredDate",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_reminders_birthdayId",
+            "unique": false,
+            "columnNames": [
+              "birthdayId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_reminders_birthdayId` ON `${TABLE_NAME}` (`birthdayId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "birthdays",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "birthdayId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c736892a529346c8eadbc915f4862f00')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aaf746a53906e2b63e9d50ca54bf08cc')"
     ]
   }
 }
