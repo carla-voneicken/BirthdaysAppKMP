@@ -1,6 +1,10 @@
 package de.carlavoneicken.birthdaysapp.presentation.edit_birthday_screen
 
+import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,12 +36,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.carlavoneicken.birthdaysapp.R
+import de.carlavoneicken.birthdaysapp.business.viewmodels.EditBirthdayEffect
 import de.carlavoneicken.birthdaysapp.business.viewmodels.EditBirthdayViewModel
+import de.carlavoneicken.birthdaysapp.notifications.ReminderSettings
+import de.carlavoneicken.birthdaysapp.notifications.scheduleDailyWorker
 import de.carlavoneicken.birthdaysapp.utils.BackgroundLight
 import de.carlavoneicken.birthdaysapp.utils.TextPrimary
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.compose.koinInject
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,27 +56,87 @@ fun EditBirthdayScreen(
     birthdayId: Long? = null, // null for new birthday, id for editing
     onDone: () -> Unit = {}
 ) {
-
     val viewModel: EditBirthdayViewModel = koinViewModel {
         parametersOf(birthdayId)
     }
     val uiState by viewModel.uiState.collectAsState()
 
+    // ------ Notifications and Permission----------------------------------------------------------
+
     // context for displaying the success message as a toast
     val context = LocalContext.current
-    // LaunchedEffect runs a coroutine whenever the key(s) passed to it change
-    // here: "run this block whenever uiState.successMessage changes"
-    LaunchedEffect(uiState.successMessage) {
-        uiState.successMessage?.let { message ->
-            // Show a Toast
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            // Navigate back
-            onDone()
-            // Reset state so it doesn’t re-trigger
-            viewModel.clearMessages()
+    val settings: ReminderSettings = koinInject()
+
+    // create and remember ActivityResultLauncher -> it is launched later
+    // “Create a launcher that can perform some system operation and return a result.”
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        // the contract defines what operation the launcher will perform, what input it needs and what
+        // type of result it will deliver -> all described in the ActivityResultContract class
+        // RequestPermission: shows a system dialog for ONE permission, input: String (permission name), output: Boolean
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            ensureDailyWorkerScheduled(context, settings)
+            Toast.makeText(context, "Birthday saved with reminders.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                context,
+                "Notification permission denied. Please enable notifications in the system settings to activate reminders.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        onDone()
+    }
+
+    // LaunchedEffect(k1, k2, ...) runs a coroutine when keys change
+    // However, Unit is a Kotlin singleton object -> it never changes
+    // Therefore LaunchedEffect(Unit) runs the effect EXACTLY once the first time the Composable enters
+    // the composition aka when the screen opens
+    LaunchedEffect(Unit) {
+        // start collecting the effects flow
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                // when the effect changes to BirthdaySaved check the permission state and if granted set Worker
+                is EditBirthdayEffect.BirthdaySaved -> {
+                    if (!effect.remindersEnabled) {
+                        Toast.makeText(context, "Birthday saved.", Toast.LENGTH_SHORT).show()
+                        onDone()
+                    } else {
+                        // if the device is using Android version lower than 13 (Tiramisu), no permission needed
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                            ensureDailyWorkerScheduled(context, settings)
+                            Toast.makeText(context, "Birthday saved with reminders.", Toast.LENGTH_SHORT).show()
+                            onDone()
+                        } else {
+                            // permission string = "android.permission.POST_NOTIFICATIONS"
+                            // Manifest.permission -> is a class that contains constants for all runtime permissions
+                            val permission = Manifest.permission.POST_NOTIFICATIONS
+
+                            // check current state of the permission
+                            // ContextCompat.checkSelfPermission returns PackageManager.PERMISSION_GRANTED if permission already granted,
+                            // otherwise .PERMISSION_DENIED
+                            // -> result is stored as a boolean
+                            val isGranted = ContextCompat.checkSelfPermission(
+                                context,
+                                permission
+                            ) == PackageManager.PERMISSION_GRANTED
+
+                            // if permission is already granted, schedule worker, otherwise ask for permission
+                            if (isGranted) {
+                                ensureDailyWorkerScheduled(context, settings)
+                                Toast.makeText(context, "Birthday saved with reminders.", Toast.LENGTH_SHORT).show()
+                                onDone()
+                            } else {
+                                notificationPermissionLauncher.launch(permission)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
+    // ------ UI -----------------------------------------------------------------------------------
     Scaffold(
         topBar = {
             TopAppBar(
@@ -195,6 +266,19 @@ fun EditBirthdayScreen(
         }
     }
 }
+
+// if now DailyWorker is yet scheduled, schedule one
+fun ensureDailyWorkerScheduled(context: Context, settings: ReminderSettings) {
+    if (!settings.workerScheduled) {
+        scheduleDailyWorker(
+            context,
+            hour = settings.reminderHour,
+            minute = settings.reminderMinute
+        )
+        settings.workerScheduled = true
+    }
+}
+
 
 @Preview
 @Composable
