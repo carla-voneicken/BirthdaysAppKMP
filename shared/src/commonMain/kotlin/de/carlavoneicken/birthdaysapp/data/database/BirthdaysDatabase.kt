@@ -7,7 +7,7 @@ import de.carlavoneicken.birthdaysapp.data.utils.LocalDateConverters
 
 @Database(
     entities = [BirthdayEntity::class, ReminderEntity::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(LocalDateConverters::class)
 // Not used because of Koin (says ChatGPT)

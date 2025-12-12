@@ -10,5 +10,6 @@ fun getAppDatabase(builder: RoomDatabase.Builder<BirthdaysDatabase>): BirthdaysD
         .setDriver(BundledSQLiteDriver())
         // database should use Dispatchers.IO for executing asynchronous queries
         .setQueryCoroutineContext(Dispatchers.IO)
+        .fallbackToDestructiveMigration(true)
         .build()
 }
