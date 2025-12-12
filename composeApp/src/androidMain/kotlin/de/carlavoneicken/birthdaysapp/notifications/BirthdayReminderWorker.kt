@@ -33,13 +33,20 @@ class BirthdayReminderWorker(
         val birthdaysWithReminders = birthdayDao.getAllBirthdaysWithReminders()
 
         // check all birthdays
-        birthdaysWithReminders.forEach { birthdayWithReminder ->
-            val birthday = birthdayWithReminder.birthday
-            // check all reminders for each birthday if they should be triggered today
-            birthdayWithReminder.reminders
+        birthdaysWithReminders.forEach { bwr ->
+            val birthday = bwr.birthday
+            // check all reminders for a birthday if they should be triggered today
+            bwr.reminders
                 .forEach { reminder ->
                     if (shouldTriggerReminder(today, birthday, reminder)) {
-                        showBirthdayNotification(applicationContext, birthday)
+                        // create reminderText depending on when the birthday actually is
+                        val reminderText: String = when (reminder.daysBefore) {
+                            0 -> "It's ${birthday.name}'s birthday today!"
+                            1 -> "It's ${birthday.name}'s birthday tomorrow!"
+                            else -> "It's ${birthday.name}'s birthday soon!"
+                        }
+
+                        showBirthdayNotification(applicationContext, birthday, reminderText)
                         reminderDao.updateLastTriggeredData(reminder.id, today)
                     }
                 }
@@ -48,6 +55,7 @@ class BirthdayReminderWorker(
     }
 }
 
+// check if a reminder should be triggered today
 private fun shouldTriggerReminder(
     today: LocalDate,
     birthday: BirthdayEntity,
