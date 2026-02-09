@@ -1,0 +1,126 @@
+
+
+
+                                               ▄▄▄▄▄▄▄                    ▄▄▄▄▄▄
+   ▄       ▄       ▄       ▄       ▄          ███▀▀▀▀▀       ▄▄           ███▀▀██▄                            ▄       ▄       ▄       ▄       ▄
+   █       █       █       █       █          ███       ▀▀█▄ ██ ▄█▀ ▄█▀█▄ ███  ███  ▀▀█▄ ██ ██ ▄█▀▀▀          █       █       █       █       █
+▀▀▀█▀▀▀ ▀▀▀█▀▀▀ ▀▀▀█▀▀▀ ▀▀▀█▀▀▀ ▀▀▀█▀▀▀       ███      ▄█▀██ ████   ██▄█▀ ███  ███ ▄█▀██ ██▄██ ▀███▄       ▀▀▀█▀▀▀ ▀▀▀█▀▀▀ ▀▀▀█▀▀▀ ▀▀▀█▀▀▀ ▀▀▀█▀▀▀
+   █       █       █       █       █          ▀███████ ▀█▄██ ██ ▀█▄ ▀█▄▄▄ ██████▀  ▀█▄██  ▀██▀ ▄▄▄█▀          █       █       █       █       █
+                                                                                           ██
+                                                                                         ▀▀▀
+
+
+
+█████▄ ▄▄▄▄   ▄▄▄    ▄▄ ▄▄▄▄▄ ▄▄ ▄▄ ▄▄▄▄▄▄
+██▄▄█▀ ██▄█▄ ██▀██   ██ ██▄▄  ██▄█▀   ██
+██     ██ ██ ▀███▀ ▄▄█▀ ██▄▄▄ ██ ██   ██
+
+
+Warum diese App?
+- Geburtstags-Reminder auf meinem Handy nervte mich -> will es besser und simpler machen
+- Weniger Zeit für das Projekt, darum nur eine ganz einfache App geplant ohne großen Schnickschnack
+
+Funktionen der App:
+- Geburtstage speichern mit Namen, Tag, Monat und ggf. Jahr
+- Geburtstage chronologisch oder alphabetisch sortiert anzeigen inklusive Countdown, Sternzeichen und ggf. Alter
+- Reminder hinzufügen -> mehrere, individuelle Reminder möglich
+- Push-Notification zur eingestellten Uhrzeit
+
+Herausforderungen:
+- Architekturmodelle wie MVVM verstehen
+- Datenbank und Dependency Injection implementieren
+- geteilte Geschäftslogik
+- Umgang mit Datenformaten und Formatierungen
+- Handhabung von Fehlern
+- Kinder und Arbeit unter einen Hut bringen
+
+Stolzer Moment:
+- erste Mal auf dem (echten) Handy einen Reminder zu sehen
+
+
+
+██████ ▄▄▄▄▄  ▄▄▄▄ ▄▄ ▄▄   ▄█████ ▄▄▄▄▄▄ ▄▄▄   ▄▄▄▄ ▄▄ ▄▄
+  ██   ██▄▄  ██▀▀▀ ██▄██   ▀▀▀▄▄▄   ██  ██▀██ ██▀▀▀ ██▄█▀
+  ██   ██▄▄▄ ▀████ ██ ██   █████▀   ██  ██▀██ ▀████ ██ ██
+
+
+- Kotlin Multiplatform App für Android und iOS, mit Fokus auf Android
+- Kotlin und Jetpack Compose für Android
+- Swift und SwiftUI für iOS
+- Room für die Datenbank
+- Koin für Dependency Injection
+- Rickclephas Observable Viewmodel und Native Coroutines
+- Bilder mit ChatGPT und pixelgenauer Bildbearbeitung erstellt
+
+- Aufbau mit MVVM:
+    * Datamodels für Birthday, Reminder und BirthdayWithReminders
+    * ViewModels: für jeden Screen eins (ListScreen, DetailScreen, EditScreen)
+    * Verschiedene Usecases
+    * Repository Interface, "echte" Implementierung und Test-Implementierung
+    * Database und DAOs für Birthdays und Reminders
+
+- Android-spezifisch:
+    * Navigation zwischen den Screens mit einem NavController
+    * Notifications mit einem WorkManager
+
+
+
+▄█████  ▄▄▄  ▄▄▄▄  ▄▄▄▄▄   █████▄ ▄▄▄▄▄ ▄▄  ▄▄▄▄ ▄▄▄▄  ▄▄ ▄▄▄▄▄ ▄▄        ███  ██  ▄▄▄ ▄▄▄▄▄▄ ▄▄ ▄▄▄▄▄ ▄▄  ▄▄▄▄  ▄▄▄ ▄▄▄▄▄▄ ▄▄  ▄▄▄  ▄▄  ▄▄  ▄▄▄▄
+██     ██▀██ ██▀██ ██▄▄    ██▄▄██ ██▄▄  ██ ███▄▄ ██▄█▀ ██ ██▄▄  ██    ▀   ██ ▀▄██ ██▀██  ██   ██ ██▄▄  ██ ██▀▀▀ ██▀██  ██   ██ ██▀██ ███▄██ ███▄▄
+▀█████ ▀███▀ ████▀ ██▄▄▄   ██▄▄█▀ ██▄▄▄ ██ ▄▄██▀ ██    ██ ██▄▄▄ ██▄▄▄ ▄   ██   ██ ▀███▀  ██   ██ ██    ██ ▀████ ██▀██  ██   ██ ▀███▀ ██ ▀██ ▄▄██▀
+
+
+class BirthdayReminderWorker:
+- birthdayDao und reminderDao by inject()
+- fun doWork():
+    * geht alle Reminder in der Datenbank durch und schaut, welche heute fällig sind
+    * wenn ja, wird showBirthdayNotification() ausgeführt
+- fun shouldTriggerReminder():
+    * Hilfsfunktion, die berechnet, ob ein Reminder heute getriggert werden soll (abhängig von Datum,
+      wieviele Tage vorher der Reminder kommen soll und ob heute schon einer getriggert wurde)
+
+
+fun showBirthdayNotification():
+- führt createBirthdayChannelIfNeeded() aus -> für Android Versioner höher als 8 muss ein Channel erstellt werden
+- erstellt einen Intent -> was passieren soll, wenn die Notification geklickt wird -> die App mit dem
+  entsprechenden Geburtstag öffnen
+- ein PendingIntent erstellen, welches Android später im Namen der App ausführen darf -> da Benachrichtigungen
+  vom System und nicht von der App verwaltet werden (und die App ggf. gar nicht läuft beim Antippen der
+  Benachrichtigung)
+- die tatsächlich gezeigte Benachrichtigung erstellen mit NotificationCompat.Builder() -> hier wird der
+  pendingIntent mitgegeben
+- die Benachrichtigung anzeigen mit NotificationManagerCompat
+
+
+private fun createBirthdayChannelIfNeeded():
+- nur nötig für Android 8+
+- ein Channel definiert Benachrichtigungs-Verhalten (z.B. Ton/keinTon, Wichtigkeit, Sichtbarkeit) ->
+  kann jederzeit in den Android-Systemeinstellungen geändert werden
+- manager.createNotificationChannel wird nur ausgeführt, wenn der Channel noch nicht existiert
+
+
+fun scheduleDailyWorker():
+- plant einen täglich wiederkehrenden WorkManager-Job, der immer zu einer bestimmten Uhrzeit ausgeführt wird
+    * PeriodicWorkRequestBuilder() -> erstellt den PeriodicWorkRequest mit einem bestimmten Intervall und
+      einer festgelegten Verzögerung bis zur ersten Ausführung
+    * WorkManager.enqueueUniquePeriodicWork -> sorgt dafür, dass immer noch EIN Worker existiert
+
+
+
+▄████▄ ▄▄ ▄▄  ▄▄▄▄ ▄▄▄▄  ▄▄    ▄▄  ▄▄▄▄ ▄▄ ▄▄
+██▄▄██ ██ ██ ███▄▄ ██▄██ ██    ██ ██▀▀▀ ██▄█▀
+██  ██ ▀███▀ ▄▄██▀ ██▄█▀ ██▄▄▄ ██ ▀████ ██ ██
+
+
+- Einstellungen (Reminderzeit, Datumsformat, Sprache, Theme, Import)
+- iOS Version auf den gleichen Stand bringen wie Android
+
+Langfristig:
+- Cloud-basierte Datenspeicherung (z.B. Firebase) und synchronisierung zwischen Geräten
+- Geschenkideen speichern
+- Widget
+- Kalenderansicht
+- Verknüpfung zu Kontakten
+- Einsortieren in Gruppen, gleiche Einstellungen pro Gruppe
+- Veröffentlichung im PlayStore!
+

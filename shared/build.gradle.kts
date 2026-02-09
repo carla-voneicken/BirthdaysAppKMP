@@ -47,10 +47,6 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
             implementation(libs.components.resources)
-
-            implementation(libs.room.runtime)
-            implementation("androidx.room:room-ktx:2.8.2")
-            implementation("androidx.room:room-common:2.8.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -60,6 +56,8 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
+            implementation("androidx.room:room-ktx:2.8.2")
+            implementation("androidx.room:room-common:2.8.2")
         }
         iosMain.dependencies {
         }
@@ -85,8 +83,10 @@ room {
 }
 
 dependencies {
-    add("kspAndroid", libs.room.compiler)
-    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspCommonMainMetadata", libs.room.compiler)
+
+    //add("kspAndroid", libs.room.compiler)
+    //add("kspIosSimulatorArm64", libs.room.compiler)
     //add("kspIosX64", libs.room.compiler)
     //add("kspIosArm64", libs.room.compiler)
 

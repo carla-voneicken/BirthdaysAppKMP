@@ -1,11 +1,13 @@
 package de.carlavoneicken.birthdaysapp.notifications
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import de.carlavoneicken.birthdaysapp.MainActivity
@@ -17,6 +19,7 @@ private const val BIRTHDAY_CHANNEL_ID = "birthday_reminders"
 private const val BIRTHDAY_CHANNEL_NAME = "Birthday reminders"
 private const val BIRTHDAY_CHANNEL_DESC = "Notifications for upcoming birthdays"
 
+@RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
 fun showBirthdayNotification(context: Context, birthday: BirthdayEntity, reminderText: String) {
     // make sure channel exists (Android 8+)
     createBirthdayChannelIfNeeded(context)
@@ -94,6 +97,7 @@ private fun createBirthdayChannelIfNeeded(context: Context) {
             description = BIRTHDAY_CHANNEL_DESC
         }
 
+        // get the Notificationmanager -> system service that manages notifications and channels
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // register channel with the system -> if the channel already exists, Android ignores the call
         manager.createNotificationChannel(channel)

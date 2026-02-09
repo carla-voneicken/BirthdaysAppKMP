@@ -5,6 +5,7 @@ package de.carlavoneicken.birthdaysapp.data.utils
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.periodUntil
 import kotlinx.datetime.todayIn
 import kotlin.math.round
 import kotlin.time.Clock
@@ -58,11 +59,12 @@ fun getDaysFromNow(date: LocalDate): String {
 }
 
 fun getNextAge(year: Int?, month: Int, day: Int) : Int? {
-    val nextBirthday = getNextBirthday(month, day)
+    if (year == null) return null
 
-    return if (year != null) {
-        nextBirthday.year - year
-    } else {
-        null
-    }
+    val today = Clock.System.todayIn(getSystemTimeZone())
+    val birthDate = LocalDate(year, month, day)
+
+    val currentAge = birthDate.periodUntil(today).years
+
+    return currentAge + 1
 }
