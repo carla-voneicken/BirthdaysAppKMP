@@ -39,7 +39,6 @@ interface BirthdayDao {
     @Query("SELECT * FROM birthdays")
     fun getAllBirthdaysWithReminders(): List<BirthdayWithRemindersEntity>
 
-
     @NativeCoroutines
     @Transaction
     @Query("SELECT * FROM birthdays WHERE id = :id")

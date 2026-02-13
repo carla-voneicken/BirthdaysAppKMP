@@ -23,8 +23,12 @@ BirthdayWithReminders(
 )
  */
 
+// One-to-many relationsship -> one birthday has many reminders
 data class BirthdayWithRemindersEntity(
-    @Embedded val birthday: BirthdayEntity,
+    // @Embedded includes all birthday fields
+    @Embedded
+    val birthday: BirthdayEntity,
+    // @Relation loads associated Reminders
     @Relation(
         parentColumn = "id",
         entityColumn = "birthdayId"

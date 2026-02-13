@@ -16,7 +16,8 @@ fun AppNavHost(birthdayIdFromNotification: Long) {
     // creates and remembers a NavController which tracks the current screen (route) and the navigation stack (back stack)
     val navController = rememberNavController()
 
-    // handle auto-navigation when starting the app by tapping a notification
+    /* LaunchedEffect: a composable that runs a suspend function when it enters the composition and RE-RUNS WHEN ITS KEY CHANGES */
+    // handle auto-navigation to detail screen when starting the app by tapping a notification
     LaunchedEffect(birthdayIdFromNotification) {
         if (birthdayIdFromNotification != -1L) {
             navController.navigate("detail/$birthdayIdFromNotification")
@@ -32,10 +33,13 @@ fun AppNavHost(birthdayIdFromNotification: Long) {
                 // when clicking add button, navigate to the edit route for a new item
                 onAddBirthday = { navController.navigate("edit") },
                 // when clicking a birthday item, navigate to edit route for an existing item (providing the id)
-                onEditBirthday = { id -> navController.navigate("detail/$id") }
+                onClickBirthday = { id -> navController.navigate("detail/$id") }
             )
         }
 
+        /* backStackEntry: contains route that was navigated to, arguments passed to that route, saved state for that destination, the associated ViewModel scope
+        backStackEntry.arguments used to extract the arguments from the route
+        -> here we use that information to pass the id as a parameter to the BirthdayDetailScreen */
         // Detail screen for a Birthday item
         composable(
             route = "detail/{id}",
@@ -45,7 +49,7 @@ fun AppNavHost(birthdayIdFromNotification: Long) {
                 }
             )
         ) { backStackEntry ->
-            val id = backStackEntry.arguments!!.getLong("id")
+            val id = backStackEntry.arguments?.getLong("id") ?: -1L
             BirthdayDetailScreen(
                 birthdayId = id,
                 onNavigateBack = { navController.popBackStack() },
@@ -74,7 +78,7 @@ fun AppNavHost(birthdayIdFromNotification: Long) {
             )
         ) { backStackEntry ->
             // read id from arguments
-            val id = backStackEntry.arguments!!.getLong("id")
+            val id = backStackEntry.arguments?.getLong("id") ?: -1L
             EditBirthdayScreen(
                 birthdayId = id,
                 // popBackStack -> navigate back to previous screen

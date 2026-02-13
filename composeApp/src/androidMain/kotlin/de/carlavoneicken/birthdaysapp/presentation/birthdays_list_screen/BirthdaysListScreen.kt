@@ -41,7 +41,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun BirthdaysListScreen(
     onAddBirthday: () -> Unit,
-    onEditBirthday: (Long) -> Unit
+    onClickBirthday: (Long) -> Unit
 ) {
     val viewModel: BirthdaysViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -129,10 +129,11 @@ fun BirthdaysListScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(uiState.birthdays) { birthday ->
+            // key parameter enables Compose to track which items are which during recomposition/reodering
+            items(uiState.birthdays, key = { it.id }) { birthday ->
                 BirthdayItemCard(
                     birthday = birthday,
-                    onClick = { onEditBirthday(birthday.id) }
+                    onClick = { onClickBirthday(birthday.id) }
                 )
             }
         }

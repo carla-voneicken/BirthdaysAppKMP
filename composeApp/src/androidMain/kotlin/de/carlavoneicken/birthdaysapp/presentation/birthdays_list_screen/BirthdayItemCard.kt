@@ -73,7 +73,6 @@ fun BirthdayItemCard(
             defaultElevation = 4.dp,
             pressedElevation = 2.dp
         )
-
     ) {
         Row(
             modifier = Modifier
